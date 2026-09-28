@@ -25,9 +25,8 @@ function HeroSection() {
       component="section"
       sx={{
         width: "100%",
-        
-        py: { xs: 0, md: "28px 34px" },
-        
+        pt: { xs: 0, md: "28px" },
+        pb: { xs: 0, md: "34px" },
         bgcolor: "primary.dark",
         position: "relative",
         overflow: "hidden",
@@ -40,6 +39,10 @@ function HeroSection() {
             xs: "1fr",
             md: "minmax(0, 1fr) minmax(0, 1fr)",
           },
+          // stretch (default) makes the image exactly as tall as the text
+          // block: from the top of "Your success, our commitment" to the
+          // bottom of the buttons.
+          alignItems: "stretch",
           width: { xs: "calc(100% - 32px)", md: "calc(100% - 48px)" },
           maxWidth: 1460,
           mx: "auto",
@@ -50,11 +53,13 @@ function HeroSection() {
       >
         <Box
           sx={{
-            p: { xs: 3, sm: 4, md: 5 },
+            // No vertical padding on desktop, so the image lines up with
+            // the first and last element of the text.
+            px: { xs: 3, sm: 4, md: 5 },
+            py: { xs: 3, sm: 4, md: 0 },
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            minHeight: { md: 540 },
             position: "relative",
             zIndex: 1,
           }}
@@ -170,7 +175,9 @@ function HeroSection() {
         </Box>
         <Box
           sx={{
-            minHeight: { xs: 230, md: 400 },
+            // Height comes from the grid row (= text block height).
+            // minHeight is only a safety floor.
+            minHeight: { xs: 230, md: 360 },
             position: "relative",
             overflow: "hidden",
             borderRadius: 3,
