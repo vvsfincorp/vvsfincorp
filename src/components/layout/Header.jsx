@@ -40,9 +40,13 @@ function Header() {
           textTransform: "uppercase",
           transition: "color .2s ease",
           borderBottom: mobile ? "1px solid #dce5ef" : "none",
-          "&:hover": {
-            color: "#a47b00",
-            bgcolor: mobile ? "#0a2e5d08" : "transparent",
+          // Only apply hover styles on devices that truly support hover,
+          // so a tap on mobile doesn't leave an item stuck highlighted.
+          "@media (hover: hover)": {
+            "&:hover": {
+              color: "#a47b00",
+              bgcolor: mobile ? "#0a2e5d08" : "transparent",
+            },
           },
           "&:focus-visible": {
             outline: "2px solid",
@@ -205,22 +209,30 @@ function Header() {
           },
         }}
       >
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
+        {/* Drawer header: brand on the left, close button pinned to the right */}
+        <Box
           sx={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) auto",
+            alignItems: "center",
+            columnGap: 1.5,
             minHeight: 68,
             mb: 2,
             pb: 1.5,
             borderBottom: "1px solid #dce5ef",
           }}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1.25}
-            sx={{ minWidth: 0 }}
+          <Link
+            href="#home"
+            onClick={closeMenu}
+            underline="none"
+            aria-label="VVS Fincorp home"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              minWidth: 0,
+            }}
           >
             <Box
               component="img"
@@ -228,20 +240,19 @@ function Header() {
               alt="VVS Fincorp logo"
               sx={{
                 display: "block",
-                width: 58,
-                height: 58,
-                objectFit: "contain",
+                width: 52,
+                height: 52,
                 flex: "0 0 auto",
+                objectFit: "contain",
               }}
             />
             <Typography
+              noWrap
               sx={{
                 color: "primary.dark",
-                font: {
-                  xs: "700 17px/1.1 Georgia, serif",
-                  sm: "700 19px/1.1 Georgia, serif",
-                },
-                whiteSpace: "nowrap",
+                font: "700 18px/1 Georgia, serif",
+                letterSpacing: "-.3px",
+                minWidth: 0,
               }}
             >
               VVS{" "}
@@ -249,15 +260,15 @@ function Header() {
                 FINCORP
               </Box>
             </Typography>
-          </Stack>
+          </Link>
+
           <IconButton
             aria-label="Close navigation"
             onClick={closeMenu}
             sx={{
-              color: "#fff",
               width: 42,
               height: 42,
-              flex: "0 0 auto",
+              color: "#fff",
               bgcolor: "primary.main",
               border: "2px solid #d4af37",
               borderRadius: "50%",
@@ -269,7 +280,8 @@ function Header() {
           >
             <CloseRoundedIcon />
           </IconButton>
-        </Stack>
+        </Box>
+
         <Stack
           component="nav"
           aria-label="Mobile navigation"
