@@ -34,7 +34,7 @@ export const services = [
   {
     title: 'Cheque-Based Finance',
     description: 'Quick funding against valid cheque transactions for business and personal requirements.',
-    benefits: ['Fast approval process', 'Minimal documentation', 'Flexible repayment options', 'Funding from ₹1 Lakh to ₹20 Crore'],
+    benefits: ['Fast approval process', 'Minimal documentation', 'Flexible repayment options', 'Funding from ₹1 Lakh to ₹30 Crore'],
   },
   {
     title: 'Short-Term Business Funding',

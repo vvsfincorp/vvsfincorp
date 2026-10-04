@@ -4,7 +4,7 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 const MIN_AMOUNT = 100000
-const MAX_AMOUNT = 200000000
+const MAX_AMOUNT = 300000000
 const MIN_RATE = 1
 const MAX_RATE = 4
 const MIN_TENURE = 3
@@ -76,7 +76,7 @@ function EmiCalculatorSection() {
   const controls = [
     {
       id: 'loan-amount', label: 'Loan amount', hint: formatCompact(amount), value: amount,
-      min: MIN_AMOUNT, max: MAX_AMOUNT, step: 100000, minLabel: '₹1 Lakh', maxLabel: '₹20 Crore',
+      min: MIN_AMOUNT, max: MAX_AMOUNT, step: 100000, minLabel: '₹1 Lakh',       maxLabel: '₹30 Crore',
       valueText: formatCurrency, adornment: '₹', position: 'start', onChange: setAmount,
     },
     {

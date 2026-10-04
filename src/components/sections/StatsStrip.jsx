@@ -33,9 +33,9 @@ function AnimatedStat({ stat, index }) {
   }, []);
 
   useEffect(() => {
-    if (!started || stat.type === "approval") return undefined;
+    if (!started || stat.type === "approval" || stat.type === "funding") return undefined;
     const target =
-      stat.type === "percentage" ? 100 : stat.type === "tenure" ? 10 : 20;
+      stat.type === "percentage" ? 100 : stat.type === "tenure" ? 10 : 30;
     const start = performance.now();
     const animate = (now) => {
       const progress = Math.min((now - start) / 1200, 1);
@@ -54,7 +54,7 @@ function AnimatedStat({ stat, index }) {
         ? `${value}%`
         : stat.type === "tenure"
           ? `3–${value || 3} Months`
-          : `₹1 Lakh – ₹${value || 1} Crore`;
+            : stat.value;
 
   return (
     <Box
