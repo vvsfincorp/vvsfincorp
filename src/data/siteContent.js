@@ -1,6 +1,6 @@
 export const companyInfo = {
   address: '115/498, 59th Street, A-Type, SIDCO Nagar, Villivakkam, Chennai - 600049',
-  email: 'vvshfincorp@gmail.com',
+  email: 'vvsfincorp@gmail.com',
 }
 
 export const navigationLinks = [
@@ -24,7 +24,7 @@ export const benefits = [
 ]
 
 export const stats = [
-  { value: '₹1 Lakh – ₹20 Crore', label: 'Funding Range', type: 'funding' },
+  { value: '₹1 Lakh – ₹30 Crore', label: 'Funding Range', type: 'funding' },
   { value: '3–10 Months', label: 'Flexible Tenure', type: 'tenure' },
   { value: 'Fast Approval', label: 'Minimal Documentation', type: 'approval' },
   { value: '100%', label: 'Transparent Process', type: 'percentage' },

@@ -12,7 +12,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube'
 
 const GOLD = '#f5c33b'
 const socialIcons = [FacebookRoundedIcon, InstagramIcon, LinkedInIcon, YouTubeIcon]
-const phoneNumbers = ['+91 9363329147', '+91 9363720179']
+const phoneNumbers = ['+91 9363772019', '+91  9363992147']
 const focusRing = { outline: `3px solid ${GOLD}`, outlineOffset: 3, borderRadius: 1 }
 
 const footerLinkSx = {
