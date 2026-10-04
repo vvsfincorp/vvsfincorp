@@ -218,7 +218,7 @@ function AboutSection() {
               lineHeight: 1.8,
             }}
           >
-            VVVVS Fincorp, founded in December 2024 in Chennai, is a financial
+            VVS Fincorp, founded in December 2024 in Chennai, is a financial
             services company helping businesses access quick, reliable funding.
             We simplify the financing process, enabling businesses to focus on
             growth and what comes next. growth. success.{" "}

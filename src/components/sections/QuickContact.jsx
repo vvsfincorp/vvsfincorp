@@ -3,7 +3,7 @@ import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 
 const GOLD = "#f5c33b";
-const phoneNumber = "+91 9363772019";
+const phoneNumber = "+91 9363992147";
 const focusRing = {
   outline: `3px solid ${GOLD}`,
   outlineOffset: 3,
