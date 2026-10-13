@@ -4,6 +4,7 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded'
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
+import { Link as RouterLink } from 'react-router-dom'
 import { services } from '../../data/siteContent'
 
 const serviceIcons = [EditNoteRoundedIcon, BusinessRoundedIcon, GroupsRoundedIcon]
@@ -133,8 +134,8 @@ function ServicesSection() {
                 </Box>
 
                 <Button
-                  component="a"
-                  href="#apply"
+                  component={RouterLink}
+                  to={`/services/${service.slug}`}
                   variant="contained"
                   disableElevation
                   endIcon={<ArrowForwardRoundedIcon />}

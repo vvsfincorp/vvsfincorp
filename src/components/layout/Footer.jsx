@@ -1,6 +1,7 @@
 import logo from '../../assets/companyLogo/VVSFINCORP-removebg-preview.png'
 import { companyInfo, navigationLinks, services, socialLinks } from '../../data/siteContent'
-import { Box, Button, IconButton, Link, Stack, Typography } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
+import { Box, IconButton, Link, Stack, Typography } from '@mui/material'
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
@@ -93,7 +94,8 @@ function Footer() {
         >
           <Box>
             <Link
-              href="#home"
+              component={RouterLink}
+              to="/"
               aria-label="VVS Fincorp home"
               underline="none"
               sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, '&:focus-visible': focusRing }}
@@ -157,12 +159,12 @@ function Footer() {
             <ColumnHeading>Quick links</ColumnHeading>
             <Stack spacing={1.5}>
               {navigationLinks.map((link) => (
-                <Link key={link.label} href={link.href} underline="none" sx={footerLinkSx}>
+                <Link key={link.label} component={RouterLink} to={`/${link.href}`} underline="none" sx={footerLinkSx}>
                   {link.label}
                 </Link>
               ))}
-              <Link href="#emi-calculator" underline="none" sx={footerLinkSx}>Repayment calculator</Link>
-              <Link href="#contact" underline="none" sx={footerLinkSx}>Contact</Link>
+              <Link component={RouterLink} to="/#emi-calculator" underline="none" sx={footerLinkSx}>Repayment calculator</Link>
+              <Link component={RouterLink} to="/#contact" underline="none" sx={footerLinkSx}>Contact</Link>
             </Stack>
           </Box>
 
@@ -170,7 +172,7 @@ function Footer() {
             <ColumnHeading>Our services</ColumnHeading>
             <Stack spacing={1.5}>
               {services.map((service) => (
-                <Link key={service.title} href="#services" underline="none" sx={footerLinkSx}>
+                <Link key={service.title} component={RouterLink} to={`/services/${service.slug}`} underline="none" sx={footerLinkSx}>
                   {service.title}
                 </Link>
               ))}
@@ -225,8 +227,8 @@ function Footer() {
             © {new Date().getFullYear()} VVS Fincorp. All rights reserved.
           </Typography>
           <IconButton
-            component="a"
-            href="#home"
+            component={RouterLink}
+            to="/#home"
             aria-label="Back to top"
             sx={{
               width: 42,

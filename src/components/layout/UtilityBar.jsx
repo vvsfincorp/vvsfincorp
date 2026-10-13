@@ -4,9 +4,9 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 import FacebookRoundedIcon from '@mui/icons-material/Facebook'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import YouTubeIcon from '@mui/icons-material/YouTube'
 
-const socialIcons = [FacebookRoundedIcon, InstagramIcon, LinkedInIcon, YouTubeIcon]
+
+const socialIcons = [FacebookRoundedIcon, InstagramIcon, LinkedInIcon,]
 
 function UtilityBar() {
   return (

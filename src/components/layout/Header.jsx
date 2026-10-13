@@ -1,9 +1,11 @@
 import { useState } from "react";
 import logo from "../../assets/companyLogo/VVSFINCORP-removebg-preview.png";
-import { navigationLinks } from "../../data/siteContent";
+import { navigationLinks, services } from "../../data/siteContent";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Button,
+  Collapse,
   Container,
   Drawer,
   IconButton,
@@ -16,52 +18,228 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // mobile drawer
+  const [servicesOpen, setServicesOpen] = useState(false); // desktop hover dropdown
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false); // mobile accordion
+
   const closeMenu = () => setMenuOpen(false);
-  const navLinks = (onClick, mobile = false) =>
-    navigationLinks.map((link) => (
-      <Link
-        href={link.href}
-        underline="none"
-        onClick={onClick}
-        key={link.label}
+  const closeAll = () => {
+    setServicesOpen(false);
+    setMobileServicesOpen(false);
+    setMenuOpen(false);
+  };
+
+  const linkSx = (mobile) => ({
+    position: "relative",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 0.25,
+    justifyContent: mobile ? "space-between" : "flex-start",
+    width: mobile ? "100%" : "auto",
+    px: mobile ? 1.5 : 0,
+    py: mobile ? 1.75 : 0,
+    color: "primary.main",
+    fontSize: 13,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    transition: "color .2s ease",
+    borderBottom: mobile ? "1px solid #dce5ef" : "none",
+    "@media (hover: hover)": {
+      "&:hover": {
+        color: "#a47b00",
+        bgcolor: mobile ? "#0a2e5d08" : "transparent",
+      },
+    },
+    "&:focus-visible": {
+      outline: "2px solid",
+      outlineColor: "secondary.light",
+      outlineOffset: 4,
+      borderRadius: 2,
+    },
+  });
+
+  /* Simple list of services (used in desktop dropdown) */
+  const desktopDropdown = (
+    <Box
+      id="services-dropdown"
+      role="menu"
+      sx={{
+        position: "absolute",
+        top: "100%", // wrapper spans the full header bar height, so this is the bar's bottom edge
+        left: "50%", // centered under the Services link
+        pt: 1.5, // invisible bridge so the hover doesn't break between bar and list
+        zIndex: 1200,
+        opacity: servicesOpen ? 1 : 0,
+        visibility: servicesOpen ? "visible" : "hidden",
+        transform: servicesOpen
+          ? "translateX(-50%) translateY(0)"
+          : "translateX(-50%) translateY(6px)",
+        transition: "opacity .18s ease, transform .18s ease, visibility .18s",
+      }}
+    >
+      <Box
         sx={{
-          position: "relative",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 0.25,
-          justifyContent: mobile ? "space-between" : "flex-start",
-          width: mobile ? "100%" : "auto",
-          px: mobile ? 1.5 : 0,
-          py: mobile ? 1.75 : 0,
-          color: "primary.main",
-          fontSize: 13,
-          fontWeight: 700,
-          textTransform: "uppercase",
-          transition: "color .2s ease",
-          borderBottom: mobile ? "1px solid #dce5ef" : "none",
-          // Only apply hover styles on devices that truly support hover,
-          // so a tap on mobile doesn't leave an item stuck highlighted.
-          "@media (hover: hover)": {
-            "&:hover": {
-              color: "#a47b00",
-              bgcolor: mobile ? "#0a2e5d08" : "transparent",
-            },
-          },
-          "&:focus-visible": {
-            outline: "2px solid",
-            outlineColor: "secondary.light",
-            outlineOffset: 4,
-            borderRadius: 2,
-          },
+          minWidth: 280,
+          p: 1,
+          overflow: "hidden", // clips anything poking out of the rounded corners
+          bgcolor: "#fff",
+          border: "1px solid #dce5ef",
+          borderRadius: 2,
+          boxShadow: "0 16px 40px #061a3326",
         }}
       >
-        {link.label}
-        {link.hasDropdown && (
-          <KeyboardArrowDownRoundedIcon sx={{ fontSize: 17, ml: 0.1 }} />
-        )}
-      </Link>
-    ));
+        {services.map((service) => (
+          <Link
+            key={service.slug}
+            role="menuitem"
+            component={RouterLink}
+            to={`/services/${service.slug}`}
+            underline="none"
+            onClick={closeAll}
+            sx={{
+              display: "block",
+              px: 1.75,
+              py: 1.25,
+              borderRadius: "8px", // hover highlight stays inside the panel's rounded corners
+              color: "primary.dark",
+              fontSize: 14,
+              fontWeight: 600,
+              textTransform: "none",
+              whiteSpace: "nowrap",
+              transition: "background-color .15s ease, color .15s ease",
+              "&:hover, &:focus-visible": {
+                bgcolor: "#f3f7fb",
+                color: "#a47b00",
+                outline: "none",
+              },
+            }}
+          >
+            {service.title}
+          </Link>
+        ))}
+      </Box>
+    </Box>
+  );
+
+  const navLinks = (onClick, mobile = false) =>
+    navigationLinks.map((link) => {
+      /* ---------- Normal links ---------- */
+      if (!link.hasDropdown) {
+        return (
+          <Link
+            key={link.label}
+            component={RouterLink}
+            to={`/${link.href}`}
+            underline="none"
+            onClick={onClick}
+            sx={linkSx(mobile)}
+          >
+            {link.label}
+          </Link>
+        );
+      }
+
+      /* ---------- Services on mobile: tap arrow to expand ---------- */
+      if (mobile) {
+        return (
+          <Box key={link.label}>
+            <Stack direction="row" alignItems="center" sx={{ borderBottom: "1px solid #dce5ef" }}>
+              <Link
+                component={RouterLink}
+                to={`/${link.href}`}
+                underline="none"
+                onClick={onClick}
+                sx={{ ...linkSx(true), borderBottom: "none", flex: 1 }}
+              >
+                {link.label}
+              </Link>
+              <IconButton
+                aria-label="Show service pages"
+                aria-expanded={mobileServicesOpen}
+                onClick={() => setMobileServicesOpen((open) => !open)}
+                size="small"
+                sx={{ color: "primary.main" }}
+              >
+                <KeyboardArrowDownRoundedIcon
+                  sx={{
+                    fontSize: 22,
+                    transition: "transform .2s ease",
+                    transform: mobileServicesOpen ? "rotate(180deg)" : "none",
+                  }}
+                />
+              </IconButton>
+            </Stack>
+            <Collapse in={mobileServicesOpen} unmountOnExit>
+              <Stack sx={{ bgcolor: "#fff", borderBottom: "1px solid #dce5ef" }}>
+                {services.map((service) => (
+                  <Link
+                    key={service.slug}
+                    component={RouterLink}
+                    to={`/services/${service.slug}`}
+                    underline="none"
+                    onClick={closeAll}
+                    sx={{
+                      px: 3,
+                      py: 1.4,
+                      color: "primary.dark",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      "&:hover": { color: "#a47b00", bgcolor: "#f3f7fb" },
+                    }}
+                  >
+                    {service.title}
+                  </Link>
+                ))}
+              </Stack>
+            </Collapse>
+          </Box>
+        );
+      }
+
+      /* ---------- Services on desktop: opens on hover / focus ---------- */
+      return (
+        <Box
+          key={link.label}
+          onMouseEnter={() => setServicesOpen(true)}
+          onMouseLeave={() => setServicesOpen(false)}
+          onFocus={() => setServicesOpen(true)}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setServicesOpen(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setServicesOpen(false);
+          }}
+          sx={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            alignSelf: "stretch", // full bar height, so the dropdown starts at the bar's bottom edge
+          }}
+        >
+          <Link
+            component={RouterLink}
+            to={`/${link.href}`}
+            underline="none"
+            aria-haspopup="true"
+            aria-expanded={servicesOpen}
+            aria-controls="services-dropdown"
+            onClick={closeAll}
+            sx={linkSx(false)}
+          >
+            {link.label}
+            <KeyboardArrowDownRoundedIcon
+              sx={{
+                fontSize: 19,
+                ml: 0.25,
+                transition: "transform .2s ease",
+                transform: servicesOpen ? "rotate(180deg)" : "none",
+              }}
+            />
+          </Link>
+          {desktopDropdown}
+        </Box>
+      );
+    });
 
   return (
     <Box
@@ -98,7 +276,8 @@ function Header() {
         }}
       >
         <Link
-          href="#home"
+          component={RouterLink}
+          to="/"
           underline="none"
           aria-label="VVS Fincorp home"
           sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}
@@ -164,16 +343,17 @@ function Header() {
           spacing={3.5}
           sx={{
             gridColumn: 2,
+            alignSelf: "stretch",
             display: { xs: "none", lg: "flex" },
             whiteSpace: "nowrap",
           }}
         >
-          {navLinks(closeMenu)}
+          {navLinks(closeAll)}
         </Stack>
         <Button
-          component="a"
-          href="#apply"
-          onClick={closeMenu}
+          component={RouterLink}
+          to="/#contact"
+          onClick={closeAll}
           variant="contained"
           sx={{
             display: { xs: "none", lg: "inline-flex" },
@@ -194,6 +374,7 @@ function Header() {
           Apply Now
         </Button>
       </Container>
+
       <Drawer
         anchor="right"
         open={menuOpen}
@@ -223,8 +404,9 @@ function Header() {
           }}
         >
           <Link
-            href="#home"
-            onClick={closeMenu}
+            component={RouterLink}
+            to="/"
+            onClick={closeAll}
             underline="none"
             aria-label="VVS Fincorp home"
             sx={{
@@ -288,11 +470,11 @@ function Header() {
           spacing={0}
           sx={{ width: "100%", alignItems: "stretch" }}
         >
-          {navLinks(closeMenu, true)}
+          {navLinks(closeAll, true)}
           <Button
-            component="a"
-            href="#apply"
-            onClick={closeMenu}
+            component={RouterLink}
+            to="/#contact"
+            onClick={closeAll}
             variant="contained"
             sx={{
               mt: 3,
