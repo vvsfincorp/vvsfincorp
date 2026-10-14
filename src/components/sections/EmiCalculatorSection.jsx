@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { Box, Button, InputAdornment, Slider, Stack, TextField, Typography } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+
+// The chart library is large, so it loads separately; the box below keeps its space reserved.
+const EmiBreakupChart = lazy(() => import('./EmiBreakupChart'))
 
 const MIN_AMOUNT = 100000
 const MAX_AMOUNT = 300000000
@@ -104,7 +106,7 @@ function EmiCalculatorSection() {
       component="section"
       id="emi-calculator"
       aria-labelledby="emi-heading"
-      sx={{ bgcolor: 'primary.main', py: { xs: 5, md: 7 }, scrollMarginTop: 112 }}
+      sx={{ bgcolor: 'primary.main', py: { xs: 4.5, md: 6 }, scrollMarginTop: 112 }}
     >
       <Box
         sx={{
@@ -127,7 +129,7 @@ function EmiCalculatorSection() {
         <Typography
           id="emi-heading"
           component="h2"
-          sx={{ mt: 1.5, color: 'primary.dark', fontSize: { xs: 26, sm: 30, md: 36 }, lineHeight: 1.1, letterSpacing: '-.03em', fontWeight: 800 }}
+          sx={{ mt: 1.5, color: 'primary.dark', fontSize: { xs: 25, sm: 28, md: 32 }, lineHeight: 1.15, letterSpacing: '-.03em', fontWeight: 800 }}
         >
           Calculate your repayment plan
         </Typography>
@@ -235,14 +237,9 @@ function EmiCalculatorSection() {
               <Box sx={{ minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography sx={{ color: 'text.secondary', fontSize: 13.5, fontWeight: 700 }}>Loan breakup</Typography>
                 <Box aria-hidden sx={{ width: '100%', height: { xs: 220, sm: 250 } }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie data={chartData} dataKey="value" nameKey="name" innerRadius="52%" outerRadius="94%" paddingAngle={2} stroke="none">
-                        {chartData.map((entry, index) => <Cell key={entry.name} fill={CHART_COLORS[index]} />)}
-                      </Pie>
-                      <Tooltip formatter={(value) => formatCurrency(value)} />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <Suspense fallback={null}>
+                    <EmiBreakupChart data={chartData} colors={CHART_COLORS} formatValue={formatCurrency} />
+                  </Suspense>
                 </Box>
                 <Stack direction="row" sx={{ mt: 1, gap: 2.5, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {chartData.map((entry, index) => (
@@ -268,7 +265,7 @@ function EmiCalculatorSection() {
           </Typography>
           <Button
             component="a"
-            href="#apply"
+            href="#contact"
             variant="contained"
             disableElevation
             endIcon={<ArrowForwardRoundedIcon />}

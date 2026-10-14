@@ -2,14 +2,14 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import { heroSlides } from "../../data/siteContent";
-import companyImage from "../../assets/CompanyPhotos/companyBoard.jpg";
+import { companyBoard } from "../../config/images";
+
 function AboutSection() {
   return (
     <Box
       component="section"
       id="about"
-      sx={{ bgcolor: "#fff", py: { xs: 6, md: 11 }, scrollMarginTop: 24 }}
+      sx={{ bgcolor: "#fff", py: { xs: 5, md: 7 }, scrollMarginTop: 24 }}
     >
       <Box
         sx={{
@@ -19,7 +19,7 @@ function AboutSection() {
             md: "minmax(0, .92fr) minmax(0, 1.08fr)",
           },
           alignItems: "center",
-          gap: { xs: 4, sm: 5, md: 8 },
+          gap: { xs: 3.5, sm: 4, md: 6 },
           width: { xs: "calc(100% - 36px)", md: "calc(100% - 96px)" },
           maxWidth: 1400,
           mx: "auto",
@@ -27,7 +27,7 @@ function AboutSection() {
       >
         <Box
           sx={{
-            minHeight: { xs: 280, sm: 360, md: 500 },
+            minHeight: { xs: 240, sm: 320, md: 400 },
             position: "relative",
             overflow: "visible",
             "&::before": {
@@ -65,8 +65,14 @@ function AboutSection() {
           >
             <Box
               component="img"
-              src={companyImage}
-              alt={heroSlides[0].alt}
+              src={companyBoard.src}
+              srcSet={companyBoard.srcSet}
+              sizes="(min-width: 900px) 45vw, 100vw"
+              width={companyBoard.width}
+              height={companyBoard.height}
+              loading="lazy"
+              decoding="async"
+              alt={companyBoard.alt}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -202,7 +208,7 @@ function AboutSection() {
             sx={{
               mt: 1.5,
               color: "primary.dark",
-              fontSize: { xs: 32, sm: 40, md: 48 },
+              fontSize: { xs: 27, sm: 32, md: 36 },
               lineHeight: 1.12,
               letterSpacing: "-.035em",
               fontWeight: 800,
@@ -221,7 +227,7 @@ function AboutSection() {
             VVS Fincorp, founded in December 2024 in Chennai, is a financial
             services company helping businesses access quick, reliable funding.
             We simplify the financing process, enabling businesses to focus on
-            growth and what comes next. growth. success.{" "}
+            growth and what comes next.
           </Typography>
           <Typography
             sx={{
@@ -241,7 +247,7 @@ function AboutSection() {
               "Clear and transparent communication",
               "Solutions tailored to your business",
             ].map((item) => (
-              <Stack key={item} direction="row" alignItems="center" spacing={1}>
+              <Stack key={item} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                 <Box
                   sx={{
                     width: 22,

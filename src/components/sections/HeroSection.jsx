@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { heroSlides } from "../../data/siteContent";
+import { heroSlides } from "../../config/images";
 import {
   Box,
   Button,
@@ -25,8 +25,8 @@ function HeroSection() {
       component="section"
       sx={{
         width: "100%",
-        pt: { xs: 0, md: "28px" },
-        pb: { xs: 0, md: "34px" },
+        pt: { xs: 0, md: "20px" },
+        pb: { xs: 0, md: "24px" },
         bgcolor: "primary.dark",
         position: "relative",
         overflow: "hidden",
@@ -87,7 +87,7 @@ function HeroSection() {
             sx={{
               mt: 1,
               color: "#fff",
-              fontSize: { xs: 42, sm: 54, md: 68 },
+              fontSize: { xs: 36, sm: 46, md: 56 },
               lineHeight: 1.03,
               letterSpacing: "-.055em",
               fontWeight: 700,
@@ -105,7 +105,7 @@ function HeroSection() {
               mt: 2.5,
               mb: 1.5,
               color: "#fff",
-              fontSize: { xs: 20, md: 27 },
+              fontSize: { xs: 18, md: 23 },
               lineHeight: 1.3,
               fontWeight: 500,
             }}
@@ -132,7 +132,7 @@ function HeroSection() {
           >
             <Button
               component="a"
-              href="#apply"
+              href="#contact"
               variant="contained"
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
@@ -177,7 +177,7 @@ function HeroSection() {
           sx={{
             // Height comes from the grid row (= text block height).
             // minHeight is only a safety floor.
-            minHeight: { xs: 230, md: 360 },
+            minHeight: { xs: 220, md: 330 },
             position: "relative",
             overflow: "hidden",
             borderRadius: 3,
@@ -188,7 +188,7 @@ function HeroSection() {
         >
           {heroSlides.map((slide, index) => (
             <Box
-              key={slide.image}
+              key={slide.src}
               sx={{
                 position: "absolute",
                 inset: 0,
@@ -199,8 +199,16 @@ function HeroSection() {
             >
               <Box
                 component="img"
-                src={slide.image}
+                src={slide.src}
+                srcSet={slide.srcSet}
+                sizes="(min-width: 900px) 50vw, 100vw"
+                width={slide.width}
+                height={slide.height}
                 alt={slide.alt}
+                // First slide is the LCP image; the others load once the page is idle
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "low"}
+                decoding="async"
                 sx={{
                   width: "100%",
                   height: "100%",
@@ -244,7 +252,7 @@ function HeroSection() {
           >
             {heroSlides.map((slide, index) => (
               <IconButton
-                key={slide.image}
+                key={slide.src}
                 size="small"
                 aria-label={`Show slide ${index + 1}`}
                 onClick={() => setActiveSlide(index)}

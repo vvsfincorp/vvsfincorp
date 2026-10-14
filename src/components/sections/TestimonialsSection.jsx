@@ -130,7 +130,7 @@ function TestimonialsSection() {
         position: 'relative',
         overflow: 'hidden',
         bgcolor: 'primary.dark',
-        py: { xs: 6, md: 8 },
+        py: { xs: 5, md: 6.5 },
         scrollMarginTop: 112,
         '&::before': {
           content: '""',
@@ -143,7 +143,7 @@ function TestimonialsSection() {
     >
       <Box sx={{ position: 'relative', width: { xs: 'calc(100% - 36px)', md: 'calc(100% - 96px)' }, maxWidth: 1400, mx: 'auto' }}>
         {/* Heading */}
-        <Stack sx={{ mb: { xs: 3.5, md: 5 }, alignItems: 'center', textAlign: 'center' }}>
+        <Stack sx={{ mb: { xs: 3, md: 4 }, alignItems: 'center', textAlign: 'center' }}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Box sx={{ width: 10, height: 10, bgcolor: GOLD, borderRadius: '2px' }} />
             <Typography sx={{ color: GOLD, fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
@@ -153,7 +153,7 @@ function TestimonialsSection() {
           <Typography
             id="testimonials-heading"
             component="h2"
-            sx={{ mt: 1.5, color: '#fff', fontSize: { xs: 26, sm: 30, md: 36 }, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.025em' }}
+            sx={{ mt: 1.5, color: '#fff', fontSize: { xs: 25, sm: 28, md: 32 }, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.025em' }}
           >
             Trusted by businesses like yours
           </Typography>

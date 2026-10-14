@@ -20,7 +20,7 @@ function ServicesSection() {
         position: 'relative',
         overflow: 'hidden',
         bgcolor: '#f5f8fc',
-        py: { xs: 7, md: 10 },
+        py: { xs: 5, md: 7 },
         scrollMarginTop: 112,
         '&::before': {
           content: '""',
@@ -37,14 +37,14 @@ function ServicesSection() {
     >
       <Box sx={{ width: { xs: 'calc(100% - 36px)', md: 'calc(100% - 96px)' }, maxWidth: 1400, mx: 'auto', position: 'relative', zIndex: 1 }}>
         {/* Heading row: heading left, decorative graphic right */}
-        <Box sx={{ position: 'relative', mb: { xs: 4, md: 6 } }}>
+        <Box sx={{ position: 'relative', mb: { xs: 3, md: 4 } }}>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           alignItems={{ xs: 'flex-start', md: 'flex-end' }}
           justifyContent="space-between"
         >
           <Box sx={{ maxWidth: 620 }}>
-            <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <Box sx={{ width: 10, height: 10, bgcolor: GOLD, borderRadius: '2px' }} />
               <Typography sx={{ color: 'secondary.main', fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
                 Our Services
@@ -53,7 +53,7 @@ function ServicesSection() {
             <Typography
               id="services-heading"
               component="h2"
-              sx={{ mt: 1.5, color: 'primary.dark', fontSize: { xs: 30, sm: 36, md: 44 }, lineHeight: 1.1, letterSpacing: '-.03em', fontWeight: 800 }}
+              sx={{ mt: 1.5, color: 'primary.dark', fontSize: { xs: 27, sm: 31, md: 36 }, lineHeight: 1.15, letterSpacing: '-.03em', fontWeight: 800 }}
             >
               Tailored Funding Solutions<br />for Every Need
             </Typography>
@@ -88,7 +88,7 @@ function ServicesSection() {
                   flexDirection: 'column',
                   minWidth: 0,
                   p: { xs: 3, md: 3.5 },
-                  pt: { xs: 3.5, md: 4 },
+                  pt: { xs: 3, md: 3.5 },
                   bgcolor: '#fff',
                   border: '1px solid #dde6f0',
                   borderRadius: 3,
@@ -121,7 +121,7 @@ function ServicesSection() {
 
                 <Box component="ul" sx={{ listStyle: 'none', m: 0, mt: 3, mb: 4, p: 0, pt: 3, borderTop: '1px solid #e8edf3', display: 'grid', gap: 1.5 }}>
                   {service.benefits.map((benefit) => (
-                    <Stack key={benefit} component="li" direction="row" alignItems="flex-start" spacing={1.25}>
+                    <Stack key={benefit} component="li" direction="row" spacing={1.25} sx={{ alignItems: 'flex-start' }}>
                       <Box
                         aria-hidden
                         sx={{ mt: '2px', width: 20, height: 20, flex: '0 0 auto', display: 'grid', placeItems: 'center', borderRadius: '50%', bgcolor: GOLD, color: 'primary.dark' }}

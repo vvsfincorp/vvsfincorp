@@ -1,7 +1,7 @@
 import { useState } from "react";
-import logo from "../../assets/companyLogo/VVSFINCORP-removebg-preview.png";
+import { logo } from "../../config/images";
 import { navigationLinks, services } from "../../data/siteContent";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, NavLink } from "react-router-dom";
 import {
   Box,
   Button,
@@ -50,6 +50,10 @@ function Header() {
         bgcolor: mobile ? "#0a2e5d08" : "transparent",
       },
     },
+    // Current page (NavLink adds .active)
+    "&.active": mobile
+      ? { color: "#a47b00", bgcolor: "#0a2e5d08", boxShadow: "inset 3px 0 0 #d4af37" }
+      : { color: "#a47b00" },
     "&:focus-visible": {
       outline: "2px solid",
       outlineColor: "secondary.light",
@@ -128,8 +132,9 @@ function Header() {
         return (
           <Link
             key={link.label}
-            component={RouterLink}
-            to={`/${link.href}`}
+            component={NavLink}
+            to={link.to}
+            end={link.to === "/"}
             underline="none"
             onClick={onClick}
             sx={linkSx(mobile)}
@@ -143,10 +148,11 @@ function Header() {
       if (mobile) {
         return (
           <Box key={link.label}>
-            <Stack direction="row" alignItems="center" sx={{ borderBottom: "1px solid #dce5ef" }}>
+            <Stack direction="row" sx={{ alignItems: 'center', borderBottom: "1px solid #dce5ef" }}>
               <Link
-                component={RouterLink}
-                to={`/${link.href}`}
+                component={NavLink}
+                to={link.to}
+                end={link.to === "/"}
                 underline="none"
                 onClick={onClick}
                 sx={{ ...linkSx(true), borderBottom: "none", flex: 1 }}
@@ -217,8 +223,9 @@ function Header() {
           }}
         >
           <Link
-            component={RouterLink}
-            to={`/${link.href}`}
+            component={NavLink}
+            to={link.to}
+            end={link.to === "/"}
             underline="none"
             aria-haspopup="true"
             aria-expanded={servicesOpen}
@@ -284,8 +291,10 @@ function Header() {
         >
           <Box
             component="img"
-            src={logo}
+            src={logo.src}
             alt="VVS Fincorp"
+            width={logo.width}
+            height={logo.height}
             sx={{
               width: { xs: 58, md: 76 },
               height: { xs: 58, md: 76 },
@@ -352,7 +361,7 @@ function Header() {
         </Stack>
         <Button
           component={RouterLink}
-          to="/#contact"
+          to="/contact"
           onClick={closeAll}
           variant="contained"
           sx={{
@@ -418,7 +427,7 @@ function Header() {
           >
             <Box
               component="img"
-              src={logo}
+              src={logo.src}
               alt="VVS Fincorp logo"
               sx={{
                 display: "block",
@@ -473,7 +482,7 @@ function Header() {
           {navLinks(closeAll, true)}
           <Button
             component={RouterLink}
-            to="/#contact"
+            to="/contact"
             onClick={closeAll}
             variant="contained"
             sx={{

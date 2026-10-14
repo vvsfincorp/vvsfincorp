@@ -68,7 +68,7 @@ function AnimatedStat({ stat, index }) {
         textAlign: { xs: "center", sm: "left" },
         gap: { xs: 0.75, sm: 1, md: 1.5 },
         px: { xs: 1, sm: 1.5, md: 2.5 },
-        py: { xs: 3.5, sm: 4, md: 4.5 },
+        py: { xs: 3, sm: 3.5, md: 3.5 },
         borderLeft: {
           xs: index % 2 ? "1px solid #ffffff30" : "none",
           md: index ? "1px solid #ffffff30" : "none",

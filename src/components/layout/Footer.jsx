@@ -1,4 +1,4 @@
-import logo from '../../assets/companyLogo/VVSFINCORP-removebg-preview.png'
+import { logo } from '../../config/images'
 import { companyInfo, navigationLinks, services, socialLinks } from '../../data/siteContent'
 import { Link as RouterLink } from 'react-router-dom'
 import { Box, IconButton, Link, Stack, Typography } from '@mui/material'
@@ -9,10 +9,11 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import FacebookRoundedIcon from '@mui/icons-material/Facebook'
 import InstagramIcon from '@mui/icons-material/Instagram'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import YouTubeIcon from '@mui/icons-material/YouTube'
 
 const GOLD = '#f5c33b'
-const socialIcons = [FacebookRoundedIcon, InstagramIcon, LinkedInIcon, YouTubeIcon]
+const socialIcons = { Facebook: FacebookRoundedIcon, Instagram: InstagramIcon, LinkedIn: LinkedInIcon }
+// Only profiles with a real URL are shown (see socialLinks in src/data/siteContent.js)
+const activeSocialLinks = socialLinks.filter((social) => social.href)
 const phoneNumbers = ['+91 9363992147', '+91 9363772019']
 const focusRing = { outline: `3px solid ${GOLD}`, outlineOffset: 3, borderRadius: 1 }
 
@@ -112,7 +113,7 @@ function Footer() {
                   boxShadow: '0 6px 18px #0003',
                 }}
               >
-                <Box component="img" src={logo} alt="" sx={{ width: 50, height: 50, objectFit: 'contain' }} />
+                <Box component="img" src={logo.src} width={logo.width} height={logo.height} alt="" loading="lazy" sx={{ width: 50, height: 50, objectFit: 'contain' }} />
               </Box>
               <Box>
                 <Typography sx={{ color: '#fff', font: '700 23px/1 Georgia, serif', letterSpacing: '-.4px' }}>
@@ -126,45 +127,46 @@ function Footer() {
             <Typography sx={{ mt: 2.5, maxWidth: 340, color: '#d5e1ef', fontSize: 14.5, lineHeight: 1.75 }}>
               Empowering businesses with quick, reliable funding solutions to help turn plans into progress.
             </Typography>
-            <Stack direction="row" spacing={1.25} sx={{ mt: 3 }}>
-              {socialLinks.map((social, index) => {
-                const SocialIcon = socialIcons[index]
-                const isExternal = /^https?:/.test(social.href)
-                return (
-                  <IconButton
-                    key={social.label}
-                    component="a"
-                    href={social.href}
-                    aria-label={social.label}
-                    {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})}
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      color: '#fff',
-                      border: '1px solid #ffffff40',
-                      transition: 'transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease',
-                      '&:hover': { bgcolor: 'secondary.light', color: 'primary.dark', borderColor: 'secondary.light', transform: 'translateY(-3px)' },
-                      '&:focus-visible': { outline: `3px solid ${GOLD}`, outlineOffset: 3 },
-                      '@media (prefers-reduced-motion: reduce)': { transition: 'none', '&:hover': { transform: 'none' } },
-                    }}
-                  >
-                    <SocialIcon sx={{ fontSize: 20 }} />
-                  </IconButton>
-                )
-              })}
-            </Stack>
+            {activeSocialLinks.length > 0 && (
+              <Stack direction="row" spacing={1.25} sx={{ mt: 3 }}>
+                {activeSocialLinks.map((social) => {
+                  const SocialIcon = socialIcons[social.label]
+                  const isExternal = /^https?:/.test(social.href)
+                  return (
+                    <IconButton
+                      key={social.label}
+                      component="a"
+                      href={social.href}
+                      aria-label={social.label}
+                      {...(isExternal ? { target: '_blank', rel: 'noreferrer' } : {})}
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        color: '#fff',
+                        border: '1px solid #ffffff40',
+                        transition: 'transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease',
+                        '&:hover': { bgcolor: 'secondary.light', color: 'primary.dark', borderColor: 'secondary.light', transform: 'translateY(-3px)' },
+                        '&:focus-visible': { outline: `3px solid ${GOLD}`, outlineOffset: 3 },
+                        '@media (prefers-reduced-motion: reduce)': { transition: 'none', '&:hover': { transform: 'none' } },
+                      }}
+                    >
+                      <SocialIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  )
+                })}
+              </Stack>
+            )}
           </Box>
 
           <Box component="nav" aria-label="Quick links">
             <ColumnHeading>Quick links</ColumnHeading>
             <Stack spacing={1.5}>
               {navigationLinks.map((link) => (
-                <Link key={link.label} component={RouterLink} to={`/${link.href}`} underline="none" sx={footerLinkSx}>
+                <Link key={link.label} component={RouterLink} to={link.to} underline="none" sx={footerLinkSx}>
                   {link.label}
                 </Link>
               ))}
               <Link component={RouterLink} to="/#emi-calculator" underline="none" sx={footerLinkSx}>Repayment calculator</Link>
-              <Link component={RouterLink} to="/#contact" underline="none" sx={footerLinkSx}>Contact</Link>
             </Stack>
           </Box>
 
@@ -223,12 +225,16 @@ function Footer() {
             justifyContent: 'space-between',
           }}
         >
-          <Typography sx={{ color: '#d5e1ef', fontSize: 13.5, lineHeight: 1.5 }}>
-            © {new Date().getFullYear()} VVS Fincorp. All rights reserved.
-          </Typography>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 0.5, sm: 2.5 }} sx={{ alignItems: { sm: 'center' } }}>
+            <Typography sx={{ color: '#d5e1ef', fontSize: 13.5, lineHeight: 1.5 }}>
+              © {new Date().getFullYear()} VVS Fincorp. All rights reserved.
+            </Typography>
+            <Link component={RouterLink} to="/privacy-policy" underline="none" sx={{ ...footerLinkSx, fontSize: 13.5, '&:hover': { color: GOLD } }}>
+              Privacy policy
+            </Link>
+          </Stack>
           <IconButton
-            component={RouterLink}
-            to="/#home"
+            onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
             aria-label="Back to top"
             sx={{
               width: 42,

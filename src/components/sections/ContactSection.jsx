@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Alert, Box, Button, ButtonBase, Stack, TextField, Typography } from '@mui/material'
+import { useRef, useState } from 'react'
+import { Alert, Box, Button, ButtonBase, CircularProgress, Stack, TextField, Typography } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import CallRoundedIcon from '@mui/icons-material/CallRounded'
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
@@ -7,6 +7,7 @@ import EmailRoundedIcon from '@mui/icons-material/EmailRounded'
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import { companyInfo } from '../../data/siteContent'
+import { isEmailServiceConfigured, sendEnquiryEmail } from '../../services/emailService'
 
 const GOLD = '#f5c33b'
 const MAP_EMBED_URL =
@@ -16,6 +17,10 @@ const fundingAmounts = ['₹1 Lakh – ₹5 Lakhs', '₹5 Lakhs – ₹25 Lakhs'
 const loanTypes = ['Cheque-Based Finance', 'Short-Term Business Funding', 'Direct Funding Solutions', 'Not sure yet']
 
 const initialValues = { name: '', company: '', mobile: '', email: '', amount: '', loanType: '', message: '' }
+const maxLengths = { name: 100, company: 120, mobile: 20, email: 254, message: 1000 }
+// Basic spam protection: bots usually fill hidden fields and submit instantly
+const MIN_FILL_TIME_MS = 3000
+const RESUBMIT_COOLDOWN_MS = 30000
 
 const validators = {
   name: (v) => (v.trim() ? '' : 'Please enter your full name'),
@@ -130,9 +135,16 @@ function ContactSection() {
   const [values, setValues] = useState(initialValues)
   const [errors, setErrors] = useState({})
   const [notice, setNotice] = useState(false)
+  // idle | sending | sent | error
+  const [status, setStatus] = useState('idle')
+  // Lazy initializer: read the clock once, when the form first mounts
+  const [mountedAt] = useState(() => Date.now())
+  const lastSentAt = useRef(0)
+  const honeypotRef = useRef(null)
 
   const setField = (name, value) => {
     setValues((current) => ({ ...current, [name]: value }))
+    if (status === 'sent' || status === 'error') setStatus('idle')
     if (errors[name]) setErrors((current) => ({ ...current, [name]: validators[name](value) }))
   }
 
@@ -165,12 +177,50 @@ function ContactSection() {
       .map(([label, value]) => `${label}: ${value}`)
       .join('\n')
 
-  const sendEmail = (event) => {
-    event.preventDefault()
-    if (!validateAll()) return
+  const openEmailApp = () => {
     const mailto = `mailto:${companyInfo.email}?subject=${encodeURIComponent('Funding request')}&body=${encodeURIComponent(buildMessage())}`
     window.location.assign(mailto)
     setNotice(true)
+  }
+
+  const sendEmail = async (event) => {
+    event.preventDefault()
+    if (status === 'sending') return
+    if (!validateAll()) return
+
+    // Without EmailJS credentials, keep the original behaviour (open the visitor's email app)
+    if (!isEmailServiceConfigured) {
+      openEmailApp()
+      return
+    }
+
+    const now = Date.now()
+    if (honeypotRef.current?.value || now - mountedAt < MIN_FILL_TIME_MS || now - lastSentAt.current < RESUBMIT_COOLDOWN_MS) {
+      setStatus('error')
+      return
+    }
+
+    setStatus('sending')
+    try {
+      await sendEnquiryEmail({
+        from_name: values.name.trim(),
+        company: values.company.trim(),
+        mobile: values.mobile.trim(),
+        reply_to: values.email.trim(),
+        funding_amount: values.amount,
+        loan_type: values.loanType,
+        message: values.message.trim() || 'Not provided',
+        page_url: window.location.href,
+        submitted_at: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      })
+      lastSentAt.current = Date.now()
+      setValues(initialValues)
+      setErrors({})
+      setStatus('sent')
+    } catch {
+      // Keep everything the visitor typed so they can retry
+      setStatus('error')
+    }
   }
 
   return (
@@ -182,7 +232,7 @@ function ContactSection() {
         position: 'relative',
         overflow: 'hidden',
         bgcolor: '#f4f7fb',
-        py: { xs: 6, md: 9 },
+        py: { xs: 5, md: 7 },
         scrollMarginTop: 112,
         '&::before': {
           content: '""',
@@ -195,7 +245,7 @@ function ContactSection() {
     >
       <Box sx={{ position: 'relative', width: { xs: 'calc(100% - 32px)', md: 'calc(100% - 96px)' }, maxWidth: 1400, mx: 'auto' }}>
         {/* Heading */}
-        <Stack sx={{ mb: { xs: 3.5, md: 5 }, alignItems: 'center', textAlign: 'center' }}>
+        <Stack sx={{ mb: { xs: 3, md: 4 }, alignItems: 'center', textAlign: 'center' }}>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Box sx={{ width: 10, height: 10, bgcolor: GOLD, borderRadius: '2px' }} />
             <Typography sx={{ color: 'primary.main', fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
@@ -205,7 +255,7 @@ function ContactSection() {
           <Typography
             id="contact-heading"
             component="h2"
-            sx={{ mt: 1.5, color: 'primary.dark', fontSize: { xs: 26, sm: 30, md: 36 }, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.025em' }}
+            sx={{ mt: 1.5, color: 'primary.dark', fontSize: { xs: 25, sm: 28, md: 32 }, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-.025em' }}
           >
             Get quick funding for your business
           </Typography>
@@ -363,6 +413,7 @@ function ContactSection() {
                 fullWidth
                 autoComplete="name"
                 value={values.name}
+                slotProps={{ htmlInput: { maxLength: maxLengths.name } }}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={Boolean(errors.name)}
@@ -376,6 +427,7 @@ function ContactSection() {
                 fullWidth
                 autoComplete="organization"
                 value={values.company}
+                slotProps={{ htmlInput: { maxLength: maxLengths.company } }}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={Boolean(errors.company)}
@@ -390,6 +442,7 @@ function ContactSection() {
                 fullWidth
                 autoComplete="tel"
                 value={values.mobile}
+                slotProps={{ htmlInput: { maxLength: maxLengths.mobile } }}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={Boolean(errors.mobile)}
@@ -404,6 +457,7 @@ function ContactSection() {
                 fullWidth
                 autoComplete="email"
                 value={values.email}
+                slotProps={{ htmlInput: { maxLength: maxLengths.email } }}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={Boolean(errors.email)}
@@ -436,6 +490,7 @@ function ContactSection() {
                 multiline
                 minRows={4}
                 value={values.message}
+                slotProps={{ htmlInput: { maxLength: maxLengths.message } }}
                 onChange={handleChange}
                 sx={{
                   ...fieldSx,
@@ -451,18 +506,40 @@ function ContactSection() {
               />
             </Stack>
 
-            {notice && (
-              <Alert severity="info" sx={{ mt: 2.5, fontSize: 13.5 }}>
-                Continue in your email app to send the request to {companyInfo.email}.
-              </Alert>
-            )}
+            {/* Honeypot: hidden from people, often filled in by spam bots */}
+            <Box aria-hidden sx={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label htmlFor="contact-website">Leave this field empty</label>
+              <input ref={honeypotRef} id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </Box>
+
+            {/* Submission feedback, announced to screen readers */}
+            <Box aria-live="polite">
+              {notice && (
+                <Alert severity="info" sx={{ mt: 2.5, fontSize: 13.5 }}>
+                  Continue in your email app to send the request to {companyInfo.email}.
+                </Alert>
+              )}
+              {status === 'sent' && (
+                <Alert severity="success" sx={{ mt: 2.5, fontSize: 13.5 }}>
+                  Thank you. Your request has been sent and our team will get in touch with you shortly.
+                </Alert>
+              )}
+              {status === 'error' && (
+                <Alert severity="error" sx={{ mt: 2.5, fontSize: 13.5 }}>
+                  Sorry, your request could not be sent. Please try again in a moment, or call us on {phoneNumbers[0].replace(/\s+/g, ' ')} or email {companyInfo.email}.
+                </Alert>
+              )}
+            </Box>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 3, alignItems: { sm: 'center' } }}>
               <Button
                 type="submit"
                 variant="contained"
-                endIcon={<ArrowForwardRoundedIcon />}
+                disabled={status === 'sending'}
+                aria-busy={status === 'sending'}
+                endIcon={status === 'sending' ? <CircularProgress size={16} color="inherit" /> : <ArrowForwardRoundedIcon />}
                 sx={{
+                  '&.Mui-disabled': { bgcolor: 'secondary.light', color: 'primary.dark', opacity: 0.75 },
                   px: 3.5,
                   py: 1.35,
                   borderRadius: 99,
@@ -474,7 +551,7 @@ function ContactSection() {
                   '&:hover': { bgcolor: '#f0d276', boxShadow: 'none' },
                 }}
               >
-                Continue in email
+                {!isEmailServiceConfigured ? 'Continue in email' : status === 'sending' ? 'Sending…' : 'Send request'}
               </Button>
             </Stack>
           </Box>
