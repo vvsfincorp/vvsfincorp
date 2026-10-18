@@ -3,7 +3,8 @@ import { createTheme } from '@mui/material/styles'
 export const brandTheme = createTheme({
   palette: {
     primary: { main: '#0a2e5d', dark: '#062149' },
-    secondary: { main: '#d4af37', light: '#e8c45a' },
+    // secondary.dark: gold dark enough for small text on light backgrounds (WCAG AA)
+    secondary: { main: '#d4af37', light: '#e8c45a', dark: '#8a6a00' },
     text: { primary: '#0a2e5d', secondary: '#526b87' },
   },
   typography: {

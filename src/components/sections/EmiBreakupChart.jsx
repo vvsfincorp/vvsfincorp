@@ -4,7 +4,8 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 function EmiBreakupChart({ data, colors, formatValue }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
+      {/* Decorative (the legend below lists the values), so keep the svg out of the tab order */}
+      <PieChart accessibilityLayer={false}>
         <Pie data={data} dataKey="value" nameKey="name" innerRadius="52%" outerRadius="94%" paddingAngle={2} stroke="none">
           {data.map((entry, index) => <Cell key={entry.name} fill={colors[index]} />)}
         </Pie>

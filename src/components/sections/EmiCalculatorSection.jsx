@@ -1,8 +1,10 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useRef, useState } from 'react'
 import { Box, Button, InputAdornment, Slider, Stack, TextField, Typography } from '@mui/material'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
+import { useInView } from '../../utils/useInView'
 
-// The chart library is large, so it loads separately; the box below keeps its space reserved.
+// The chart library is large, so it loads separately, and only once the chart is near the
+// viewport; the box below keeps its space reserved.
 const EmiBreakupChart = lazy(() => import('./EmiBreakupChart'))
 
 const MIN_AMOUNT = 100000
@@ -65,6 +67,8 @@ function EmiCalculatorSection() {
   const [amount, setAmount] = useState(7500000)
   const [rate, setRate] = useState(2)
   const [tenure, setTenure] = useState(10)
+  const chartRef = useRef(null)
+  const showChart = useInView(chartRef, { rootMargin: '400px 0px', once: true })
 
   const interest = Math.round(amount * (rate / 100) * tenure)
   const totalRepayment = amount + interest
@@ -122,7 +126,7 @@ function EmiCalculatorSection() {
         {/* Header */}
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <Box sx={{ width: 10, height: 10, bgcolor: GOLD, borderRadius: '2px' }} />
-          <Typography sx={{ color: 'secondary.main', fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+          <Typography sx={{ color: 'secondary.dark', fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
             Plan with confidence
           </Typography>
         </Stack>
@@ -236,10 +240,12 @@ function EmiCalculatorSection() {
               {/* Chart */}
               <Box sx={{ minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography sx={{ color: 'text.secondary', fontSize: 13.5, fontWeight: 700 }}>Loan breakup</Typography>
-                <Box aria-hidden sx={{ width: '100%', height: { xs: 220, sm: 250 } }}>
-                  <Suspense fallback={null}>
-                    <EmiBreakupChart data={chartData} colors={CHART_COLORS} formatValue={formatCurrency} />
-                  </Suspense>
+                <Box ref={chartRef} aria-hidden sx={{ width: '100%', height: { xs: 220, sm: 250 } }}>
+                  {showChart && (
+                    <Suspense fallback={null}>
+                      <EmiBreakupChart data={chartData} colors={CHART_COLORS} formatValue={formatCurrency} />
+                    </Suspense>
+                  )}
                 </Box>
                 <Stack direction="row" sx={{ mt: 1, gap: 2.5, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {chartData.map((entry, index) => (

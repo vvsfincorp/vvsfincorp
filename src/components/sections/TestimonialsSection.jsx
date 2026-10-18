@@ -3,6 +3,7 @@ import { Avatar, Box, IconButton, Rating, Stack, Typography } from '@mui/materia
 import FormatQuoteRoundedIcon from '@mui/icons-material/FormatQuoteRounded'
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
+import { useInView } from '../../utils/useInView'
 
 const GOLD = '#f5c33b'
 const AUTO_SCROLL_MS = 4000
@@ -69,7 +70,9 @@ function TestimonialsSection() {
   const scrollerRef = useRef(null)
   const activeRef = useRef(0)
   const pausedRef = useRef(false)
+  const scrollFrameRef = useRef(0)
   const [active, setActive] = useState(0)
+  const inView = useInView(scrollerRef)
 
   const prefersReducedMotion = () =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -89,17 +92,27 @@ function TestimonialsSection() {
 
   const move = (step) => goTo((activeRef.current + step + testimonials.length) % testimonials.length)
 
-  // auto scroll: move to the next card every few seconds (pauses on hover, focus and touch)
+  // auto scroll: move to the next card every few seconds while the row is on screen
+  // (pauses on hover, focus and touch)
   useEffect(() => {
-    if (prefersReducedMotion()) return undefined
+    if (!inView || prefersReducedMotion()) return undefined
     const timer = setInterval(() => {
       if (!pausedRef.current && !document.hidden) move(1)
     }, AUTO_SCROLL_MS)
     return () => clearInterval(timer)
-  }, [])
+  }, [inView])
 
-  // keep the dots in sync with native scrolling (touch, trackpad, wheel, keyboard)
+  useEffect(() => () => cancelAnimationFrame(scrollFrameRef.current), [])
+
+  // keep the dots in sync with native scrolling (touch, trackpad, wheel, keyboard);
+  // measured at most once per frame, since reading offsetLeft forces layout
   const handleScroll = () => {
+    if (scrollFrameRef.current) return
+    scrollFrameRef.current = requestAnimationFrame(syncActiveToScroll)
+  }
+
+  const syncActiveToScroll = () => {
+    scrollFrameRef.current = 0
     const scroller = scrollerRef.current
     if (!scroller) return
     const atEnd = scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 4
@@ -234,7 +247,7 @@ function TestimonialsSection() {
           <IconButton aria-label="Previous testimonial" onClick={() => move(-1)} size="small" sx={arrowSx}>
             <ArrowBackRoundedIcon fontSize="small" />
           </IconButton>
-          <Stack direction="row" spacing={1.25} role="group" aria-label="Choose testimonial" sx={{ alignItems: 'center' }}>
+          <Stack direction="row" role="group" aria-label="Choose testimonial" sx={{ alignItems: 'center' }}>
             {testimonials.map((testimonial, index) => (
               <IconButton
                 key={testimonial.name}
@@ -242,18 +255,25 @@ function TestimonialsSection() {
                 aria-pressed={active === index}
                 onClick={() => goTo(index)}
                 disableRipple
+                // The button is a 24px touch target; the visible pill is drawn by ::before
                 sx={{
-                  width: active === index ? 26 : 10,
-                  height: 10,
+                  width: active === index ? 40 : 24,
+                  height: 24,
                   minWidth: 0,
                   p: 0,
                   borderRadius: 99,
-                  bgcolor: active === index ? GOLD : '#ffffff80',
                   transition: 'width .2s ease',
-                  '&::after': { content: '""', position: 'absolute', inset: '-12px -6px' },
-                  '&:hover': { bgcolor: GOLD },
-                  '&:focus-visible': { outline: `3px solid ${GOLD}`, outlineOffset: 3 },
-                  '@media (prefers-reduced-motion: reduce)': { transition: 'none' },
+                  '&::before': {
+                    content: '""',
+                    width: active === index ? 26 : 10,
+                    height: 10,
+                    borderRadius: 99,
+                    bgcolor: active === index ? GOLD : '#ffffff80',
+                    transition: 'width .2s ease, background-color .2s ease',
+                  },
+                  '&:hover::before': { bgcolor: GOLD },
+                  '&:focus-visible': { outline: `3px solid ${GOLD}`, outlineOffset: -4 },
+                  '@media (prefers-reduced-motion: reduce)': { transition: 'none', '&::before': { transition: 'none' } },
                 }}
               />
             ))}

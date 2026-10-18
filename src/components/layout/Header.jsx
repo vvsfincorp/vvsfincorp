@@ -65,14 +65,14 @@ function Header() {
     borderBottom: mobile ? "1px solid #dce5ef" : "none",
     "@media (hover: hover)": {
       "&:hover": {
-        color: "#a47b00",
+        color: "#8a6a00",
         bgcolor: mobile ? "#0a2e5d08" : "transparent",
       },
     },
     // Current page (NavLink adds .active)
     "&.active": mobile
-      ? { color: "#a47b00", bgcolor: "#0a2e5d08", boxShadow: "inset 3px 0 0 #d4af37" }
-      : { color: "#a47b00" },
+      ? { color: "#8a6a00", bgcolor: "#0a2e5d08", boxShadow: "inset 3px 0 0 #d4af37" }
+      : { color: "#8a6a00" },
     "&:focus-visible": {
       outline: "2px solid",
       outlineColor: "secondary.light",
@@ -132,7 +132,7 @@ function Header() {
               transition: "background-color .15s ease, color .15s ease",
               "&:hover, &:focus-visible": {
                 bgcolor: "#f3f7fb",
-                color: "#a47b00",
+                color: "#8a6a00",
                 outline: "none",
               },
             }}
@@ -209,7 +209,7 @@ function Header() {
                       color: "primary.dark",
                       fontSize: 14,
                       fontWeight: 600,
-                      "&:hover": { color: "#a47b00", bgcolor: "#f3f7fb" },
+                      "&:hover": { color: "#8a6a00", bgcolor: "#f3f7fb" },
                     }}
                   >
                     {service.title}
@@ -306,12 +306,13 @@ function Header() {
           component={RouterLink}
           to="/"
           underline="none"
-          aria-label="VVS Fincorp home"
           sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}
         >
           <Box
             component="img"
             src={logo.src}
+            srcSet={logo.srcSet}
+            sizes="(min-width: 900px) 76px, 58px"
             alt="VVS Fincorp"
             width={logo.width}
             height={logo.height}
@@ -336,7 +337,7 @@ function Header() {
               }}
             >
               VVS{" "}
-              <Box component="span" sx={{ color: "secondary.main" }}>
+              <Box component="span" sx={{ color: "#a67c00" }}>
                 FINCORP
               </Box>
             </Typography>
@@ -408,7 +409,6 @@ function Header() {
         anchor="right"
         open={menuOpen}
         onClose={closeMenu}
-        ModalProps={{ keepMounted: true }}
         sx={{
           "& .MuiDrawer-paper": {
             width: { xs: "min(360px, 88vw)", sm: 360 },
@@ -437,7 +437,6 @@ function Header() {
             to="/"
             onClick={closeAll}
             underline="none"
-            aria-label="VVS Fincorp home"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -448,6 +447,8 @@ function Header() {
             <Box
               component="img"
               src={logo.src}
+              srcSet={logo.srcSet}
+              sizes="52px"
               alt="VVS Fincorp logo"
               sx={{
                 display: "block",
@@ -467,7 +468,7 @@ function Header() {
               }}
             >
               VVS{" "}
-              <Box component="span" sx={{ color: "secondary.main" }}>
+              <Box component="span" sx={{ color: "secondary.dark" }}>
                 FINCORP
               </Box>
             </Typography>

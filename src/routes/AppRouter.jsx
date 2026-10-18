@@ -22,15 +22,26 @@ function ScrollManager() {
     if (!hash) window.scrollTo(0, 0)
   }, [pathname, hash])
 
+  // The target may be in a section that is still loading (e.g. /#emi-calculator from another
+  // page), so keep looking for it each frame for a few seconds.
   useEffect(() => {
     if (!hash) return undefined
 
-    const frame = window.requestAnimationFrame(() => {
-      document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-        block: 'start',
-      })
-    })
+    const id = decodeURIComponent(hash.slice(1))
+    const giveUpAt = performance.now() + 4000
+    let frame = 0
+    const scrollToTarget = () => {
+      const target = document.getElementById(id)
+      if (target) {
+        target.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+          block: 'start',
+        })
+      } else if (performance.now() < giveUpAt) {
+        frame = window.requestAnimationFrame(scrollToTarget)
+      }
+    }
+    frame = window.requestAnimationFrame(scrollToTarget)
 
     return () => window.cancelAnimationFrame(frame)
   }, [hash, pathname])

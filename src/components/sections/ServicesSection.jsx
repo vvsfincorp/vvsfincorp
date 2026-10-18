@@ -7,6 +7,7 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import { Link as RouterLink } from 'react-router-dom'
 import { serviceImages } from '../../config/images'
 import { services } from '../../data/siteContent'
+import { visuallyHiddenSx } from '../common/styles'
 
 const serviceIcons = [EditNoteRoundedIcon, BusinessRoundedIcon, GroupsRoundedIcon]
 const GOLD = '#f5c33b'
@@ -46,7 +47,7 @@ function ServicesSection() {
           <Box sx={{ maxWidth: 620 }}>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
               <Box sx={{ width: 10, height: 10, bgcolor: GOLD, borderRadius: '2px' }} />
-              <Typography sx={{ color: 'secondary.main', fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+              <Typography sx={{ color: 'secondary.dark', fontSize: 12.5, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase' }}>
                 Our Services
               </Typography>
             </Stack>
@@ -164,7 +165,6 @@ function ServicesSection() {
                     variant="contained"
                     disableElevation
                     endIcon={<ArrowForwardRoundedIcon />}
-                    aria-label={`Learn more about ${service.title}`}
                     sx={{
                       mt: 'auto',
                       alignSelf: 'flex-start',
@@ -182,7 +182,7 @@ function ServicesSection() {
                       '@media (prefers-reduced-motion: reduce)': { '& .MuiButton-endIcon': { transition: 'none' }, '&:hover .MuiButton-endIcon': { transform: 'none' } },
                     }}
                   >
-                    Learn more
+                    Learn more<Box component="span" sx={visuallyHiddenSx}> about {service.title}</Box>
                   </Button>
                 </Box>
               </Box>

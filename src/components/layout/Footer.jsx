@@ -97,7 +97,6 @@ function Footer() {
             <Link
               component={RouterLink}
               to="/"
-              aria-label="VVS Fincorp home"
               underline="none"
               sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.5, '&:focus-visible': focusRing }}
             >
@@ -113,7 +112,7 @@ function Footer() {
                   boxShadow: '0 6px 18px #0003',
                 }}
               >
-                <Box component="img" src={logo.src} width={logo.width} height={logo.height} alt="" loading="lazy" sx={{ width: 50, height: 50, objectFit: 'contain' }} />
+                <Box component="img" src={logo.src} srcSet={logo.srcSet} sizes="50px" width={logo.width} height={logo.height} alt="" loading="lazy" sx={{ width: 50, height: 50, objectFit: 'contain' }} />
               </Box>
               <Box>
                 <Typography sx={{ color: '#fff', font: '700 23px/1 Georgia, serif', letterSpacing: '-.4px' }}>

@@ -184,7 +184,7 @@ function AboutSection() {
               display: "flex",
               alignItems: "center",
               gap: 1,
-              color: "secondary.main",
+              color: "secondary.dark",
               fontSize: 12,
               lineHeight: 1.4,
               fontWeight: 800,

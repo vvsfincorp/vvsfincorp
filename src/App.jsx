@@ -1,10 +1,14 @@
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import Header from './components/layout/Header'
 import UtilityBar from './components/layout/UtilityBar'
-import Footer from './components/layout/Footer'
 import AppRouter from './routes/AppRouter'
 import RouteMeta from './seo/RouteMeta'
 import { brandTheme } from './theme'
+import { afterLoad } from './utils/afterLoad'
+
+// The footer is below the fold on every page, so it renders once the page has loaded
+const Footer = lazy(() => import('./components/layout/Footer'))
 
 // Moves keyboard focus past the header to the current page's <main> landmark
 function skipToContent(event) {
@@ -16,6 +20,9 @@ function skipToContent(event) {
 }
 
 function App() {
+  const [showFooter, setShowFooter] = useState(false)
+  useEffect(() => afterLoad(() => setShowFooter(true)), [])
+
   return (
     <ThemeProvider theme={brandTheme}>
       <CssBaseline />
@@ -23,8 +30,15 @@ function App() {
       <a className="skip-link" href="#main" onClick={skipToContent}>Skip to content</a>
       <UtilityBar />
       <Header />
-      <AppRouter />
-      <Footer />
+      {/* Skip-link target; skipToContent moves focus to the <main> inside */}
+      <div id="main">
+        <AppRouter />
+      </div>
+      {showFooter && (
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
+      )}
     </ThemeProvider>
   )
 }

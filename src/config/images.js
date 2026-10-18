@@ -10,6 +10,8 @@
  * For a quick swap you can also import any .jpg/.png/.webp here and set it as `src`
  * (leave `srcSet` empty).
  */
+import logoSmall from '../assets/optimized/logo-96.webp'
+import logoMedium from '../assets/optimized/logo-160.webp'
 import logoImage from '../assets/optimized/logo-192.webp'
 import home1Small from '../assets/optimized/home-1-640.webp'
 import home1Medium from '../assets/optimized/home-1-1024.webp'
@@ -33,29 +35,36 @@ import hero2Small from '../assets/optimized/hero-2-640.webp'
 import hero2Medium from '../assets/optimized/hero-2-1024.webp'
 import hero2Large from '../assets/optimized/hero-2-1600.webp'
 import boardSmall from '../assets/optimized/company-board-640.webp'
+import boardMedium from '../assets/optimized/company-board-800.webp'
 import boardLarge from '../assets/optimized/company-board-1076.webp'
 import { heroSlideChoices } from './heroSlides'
 import analyticsXs from '../assets/optimized/analytics-400.webp'
 import analyticsSmall from '../assets/optimized/analytics-640.webp'
+import analyticsTablet from '../assets/optimized/analytics-768.webp'
 import analyticsMedium from '../assets/optimized/analytics-1024.webp'
 import analyticsLarge from '../assets/optimized/analytics-1600.webp'
 import handshakeXs from '../assets/optimized/handshake-400.webp'
 import handshakeSmall from '../assets/optimized/handshake-640.webp'
+import handshakeTablet from '../assets/optimized/handshake-768.webp'
 import handshakeMedium from '../assets/optimized/handshake-1024.webp'
 import handshakeLarge from '../assets/optimized/handshake-1600.webp'
 import planningXs from '../assets/optimized/planning-400.webp'
 import planningSmall from '../assets/optimized/planning-640.webp'
+import planningTablet from '../assets/optimized/planning-768.webp'
 import planningMedium from '../assets/optimized/planning-1024.webp'
 import planningLarge from '../assets/optimized/planning-1600.webp'
 import consultationXs from '../assets/optimized/consultation-400.webp'
 import consultationSmall from '../assets/optimized/consultation-640.webp'
+import consultationTablet from '../assets/optimized/consultation-768.webp'
 import consultationMedium from '../assets/optimized/consultation-1024.webp'
 import consultationLarge from '../assets/optimized/consultation-1600.webp'
 
 const srcSet = (sources) => sources.map(([file, width]) => `${file} ${width}w`).join(', ')
 
+// Shown at 50-76px; the srcSet lets 1x/2x screens pick the 96/160px file instead of 192px
 export const logo = {
   src: logoImage,
+  srcSet: srcSet([[logoSmall, 96], [logoMedium, 160], [logoImage, 192]]),
   alt: 'VVS Fincorp logo',
   width: 192,
   height: 192,
@@ -119,7 +128,7 @@ const heroPlanning = {
 
 export const companyBoard = {
   src: boardLarge,
-  srcSet: srcSet([[boardSmall, 640], [boardLarge, 1076]]),
+  srcSet: srcSet([[boardSmall, 640], [boardMedium, 800], [boardLarge, 1076]]),
   width: 1076,
   height: 900,
   alt: 'VVS Fincorp illuminated company signboard',
@@ -127,7 +136,7 @@ export const companyBoard = {
 
 const analytics = {
   src: analyticsLarge,
-  srcSet: srcSet([[analyticsXs, 400], [analyticsSmall, 640], [analyticsMedium, 1024], [analyticsLarge, 1600]]),
+  srcSet: srcSet([[analyticsXs, 400], [analyticsSmall, 640], [analyticsTablet, 768], [analyticsMedium, 1024], [analyticsLarge, 1600]]),
   width: 1600,
   height: 1140,
   alt: 'Laptop showing a business finance dashboard with revenue charts',
@@ -135,7 +144,7 @@ const analytics = {
 
 const handshake = {
   src: handshakeLarge,
-  srcSet: srcSet([[handshakeXs, 400], [handshakeSmall, 640], [handshakeMedium, 1024], [handshakeLarge, 1600]]),
+  srcSet: srcSet([[handshakeXs, 400], [handshakeSmall, 640], [handshakeTablet, 768], [handshakeMedium, 1024], [handshakeLarge, 1600]]),
   width: 1600,
   height: 1068,
   alt: 'Business owner and finance partner shaking hands over a funding agreement',
@@ -143,7 +152,7 @@ const handshake = {
 
 const planning = {
   src: planningLarge,
-  srcSet: srcSet([[planningXs, 400], [planningSmall, 640], [planningMedium, 1024], [planningLarge, 1600]]),
+  srcSet: srcSet([[planningXs, 400], [planningSmall, 640], [planningTablet, 768], [planningMedium, 1024], [planningLarge, 1600]]),
   width: 1600,
   height: 1068,
   alt: 'Business owner reviewing short-term cash flow charts on a tablet',
@@ -151,7 +160,7 @@ const planning = {
 
 const consultation = {
   src: consultationLarge,
-  srcSet: srcSet([[consultationXs, 400], [consultationSmall, 640], [consultationMedium, 1024], [consultationLarge, 1600]]),
+  srcSet: srcSet([[consultationXs, 400], [consultationSmall, 640], [consultationTablet, 768], [consultationMedium, 1024], [consultationLarge, 1600]]),
   width: 1600,
   height: 997,
   alt: 'Funding advisor talking clients through their options on a laptop',

@@ -32,12 +32,13 @@ const photos = {
   'home-6': { source: 'HeroSection/Gemini_Generated_Image_v2ak8pv2ak8pv2ak.png', widths: [640, 1024, 1488] },
   // Why Choose Us page banner
   'hero-2': { source: 'HeroSection/herosectionSlider2.jpg', widths: [640, 1024, 1600] },
-  'company-board': { source: 'CompanyPhotos/companyBoard.jpg', widths: [640, 1076] },
-  // Services, service detail and Why Choose Us pages (400px is for small card thumbnails)
-  'analytics': { source: 'HeroSection/carlos-muza-hpjSkU2UYSU-unsplash.jpg', widths: [400, 640, 1024, 1600] },
-  'handshake': { source: 'HeroSection/business-people-shaking-hands-finishing-up-meeting.jpg', widths: [400, 640, 1024, 1600] },
-  'planning': { source: 'HeroSection/towfiqu-barbhuiya-nApaSgkzaxg-unsplash.jpg', widths: [400, 640, 1024, 1600] },
-  'consultation': { source: 'HeroSection/young-couple-real-estate-agent-using-laptop-while-going-through-housing-plan-meeting.jpg', widths: [400, 640, 1024, 1600] },
+  'company-board': { source: 'CompanyPhotos/companyBoard.jpg', widths: [640, 800, 1076], quality: 64 },
+  // Services, service detail and Why Choose Us pages (400px is for small card thumbnails;
+  // 768px fits full-width phone cards at 2x without falling back to 1024px)
+  'analytics': { source: 'HeroSection/carlos-muza-hpjSkU2UYSU-unsplash.jpg', widths: [400, 640, 768, 1024, 1600] },
+  'handshake': { source: 'HeroSection/business-people-shaking-hands-finishing-up-meeting.jpg', widths: [400, 640, 768, 1024, 1600] },
+  'planning': { source: 'HeroSection/towfiqu-barbhuiya-nApaSgkzaxg-unsplash.jpg', widths: [400, 640, 768, 1024, 1600] },
+  'consultation': { source: 'HeroSection/young-couple-real-estate-agent-using-laptop-while-going-through-housing-plan-meeting.jpg', widths: [400, 640, 768, 1024, 1600] },
 }
 
 const logoSource = path.join(assets, 'companyLogo/VVSFINCORP-removebg-preview.png')
@@ -64,7 +65,10 @@ async function optimizeBrand() {
   await mkdir(brandDir, { recursive: true })
   const logo = sharp(logoSource).trim()
 
-  // Header / footer / splash logo
+  // Header / footer / splash logo (96 and 160 serve the 50-76px header and footer logos)
+  for (const size of [96, 160]) {
+    await logo.clone().resize({ width: size, height: size, fit: 'contain', background: '#0000' }).webp({ quality: 90 }).toFile(path.join(optimizedDir, `logo-${size}.webp`))
+  }
   await logo.clone().resize({ width: 192, height: 192, fit: 'contain', background: '#0000' }).webp({ quality: 90 }).toFile(path.join(optimizedDir, 'logo-192.webp'))
   await logo.clone().resize({ width: 256, height: 256, fit: 'contain', background: '#0000' }).webp({ quality: 90 }).toFile(path.join(brandDir, 'logo-256.webp'))
   await logo.clone().resize({ width: 512, height: 512, fit: 'contain', background: '#0000' }).png().toFile(path.join(brandDir, 'logo-512.png'))
