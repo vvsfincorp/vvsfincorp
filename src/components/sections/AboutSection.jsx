@@ -112,9 +112,9 @@ function AboutSection() {
             </Box>
             <Stack
               direction="row"
-              alignItems="center"
               spacing={1.25}
               sx={{
+                alignItems: "center",
                 position: "absolute",
                 zIndex: 1,
                 left: { xs: 12, sm: "auto" },

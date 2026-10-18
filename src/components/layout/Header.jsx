@@ -368,9 +368,9 @@ function Header() {
         <Stack
           component="nav"
           direction="row"
-          alignItems="center"
           spacing={3.5}
           sx={{
+            alignItems: "center",
             gridColumn: 2,
             alignSelf: "stretch",
             display: { xs: "none", lg: "flex" },
