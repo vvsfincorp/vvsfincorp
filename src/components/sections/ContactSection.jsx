@@ -12,7 +12,7 @@ import { isEmailServiceConfigured, sendEnquiryEmail } from '../../services/email
 const GOLD = '#f5c33b'
 const MAP_EMBED_URL =
   'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5495.431109744533!2d80.1984679778197!3d13.108269299887198!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265002c424433%3A0xbd448f4dd89eb96d!2sVVS%20Fincorp!5e0!3m2!1sen!2sin!4v1790599736131!5m2!1sen!2sin'
-const phoneNumbers = ['+91  9363992147', '+91 9363720179']
+const phoneNumbers = ['+91  9363992147', '+91 9363772019']
 const fundingAmounts = ['₹1 Lakh – ₹5 Lakhs', '₹5 Lakhs – ₹25 Lakhs', '₹25 Lakhs – ₹1 Crore', '₹1 Crore – ₹30 Crore']
 const loanTypes = ['Cheque-Based Finance', 'Short-Term Business Funding', 'Direct Funding Solutions', 'Not sure yet']
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { logo } from "../../config/images";
 import { navigationLinks, services } from "../../data/siteContent";
 import { Link as RouterLink, NavLink } from "react-router-dom";
@@ -21,6 +21,25 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false); // mobile drawer
   const [servicesOpen, setServicesOpen] = useState(false); // desktop hover dropdown
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false); // mobile accordion
+  const headerRef = useRef(null);
+
+  // Publish the height of the top bar + header as --site-chrome-h, so page heroes can
+  // fill exactly the rest of the first screen. Re-measured whenever either one resizes.
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    const utilityBar = document.querySelector("[data-utility-bar]");
+    if (!header) return undefined;
+    const update = () => {
+      const height = header.offsetHeight + (utilityBar?.offsetHeight ?? 0);
+      document.documentElement.style.setProperty("--site-chrome-h", `${height}px`);
+    };
+    update();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(update);
+    observer.observe(header);
+    if (utilityBar) observer.observe(utilityBar);
+    return () => observer.disconnect();
+  }, []);
 
   const closeMenu = () => setMenuOpen(false);
   const closeAll = () => {
@@ -58,7 +77,7 @@ function Header() {
       outline: "2px solid",
       outlineColor: "secondary.light",
       outlineOffset: 4,
-      borderRadius: 2,
+      borderRadius: "6px",
     },
   });
 
@@ -250,6 +269,7 @@ function Header() {
 
   return (
     <Box
+      ref={headerRef}
       component="header"
       sx={{
         width: "100%",

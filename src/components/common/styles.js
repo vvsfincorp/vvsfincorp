@@ -101,3 +101,7 @@ export const textLinkButtonSx = {
 }
 
 export const visuallyHiddenSx = { position: 'absolute', width: 1, height: 1, p: 0, m: -1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap', border: 0 }
+
+// Fills the first screen below the top bar + sticky header on laptops and desktops.
+// --site-chrome-h is measured and kept up to date by the Header component.
+export const firstScreenMinHeight = { md: 'calc(100vh - var(--site-chrome-h, 180px))' }

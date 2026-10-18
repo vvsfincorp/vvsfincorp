@@ -65,7 +65,7 @@ function ServicesPage() {
                 <Reveal key={service.slug} delay={index * 90}>
                   <Box component="article" aria-labelledby={`service-${service.slug}`} sx={{ ...cardSx, p: 0, display: 'flex', flexDirection: 'column', '&:hover img': { transform: 'scale(1.04)' } }}>
                     <Box sx={{ position: 'relative', aspectRatio: '16 / 9', overflow: 'hidden', bgcolor: '#eaf1f9' }}>
-                      <Box component="img" src={image.src} srcSet={image.srcSet} sizes="(min-width: 900px) 30vw, (min-width: 600px) 50vw, 100vw" width={image.width} height={image.height} alt={image.alt} loading="lazy" decoding="async" sx={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .5s ease', '@media (prefers-reduced-motion: reduce)': { transition: 'none' } }} />
+                      <Box component="img" src={image.src} srcSet={image.srcSet} sizes="(min-width: 1300px) 380px, (min-width: 900px) 30vw, (min-width: 600px) 50vw, 100vw" width={image.width} height={image.height} alt={image.alt} loading="lazy" decoding="async" sx={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .5s ease', '@media (prefers-reduced-motion: reduce)': { transition: 'none' } }} />
                       <Box sx={{ position: 'absolute', top: 12, left: 12, px: 1.1, py: 0.4, borderRadius: 99, bgcolor: '#062149d9', color: 'secondary.light', fontSize: 11, fontWeight: 800, letterSpacing: '.12em' }}>
                         0{index + 1}
                       </Box>

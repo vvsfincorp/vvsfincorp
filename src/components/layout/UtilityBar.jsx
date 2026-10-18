@@ -14,7 +14,7 @@ const contactLinkSx = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace
 
 function UtilityBar() {
   return (
-    <Box sx={{ display: { xs: 'none', md: 'block' }, bgcolor: 'primary.dark', color: '#fff', minHeight: 60, borderBottom: '3px solid', borderColor: 'secondary.main' }}>
+    <Box data-utility-bar sx={{ display: { xs: 'none', md: 'block' }, bgcolor: 'primary.dark', color: '#fff', minHeight: 60, borderBottom: '3px solid', borderColor: 'secondary.main' }}>
       <Box sx={{
         width: { xs: 'calc(100% - 20px)', md: 'calc(100% - 32px)' },
         maxWidth: 1400, minHeight: 60, mx: 'auto', px: { xs: 2, md: 3.5 },

@@ -12,7 +12,7 @@ export const pages = [
   {
     path: '/',
     title: 'VVS Fincorp | Business Funding & Cheque-Based Finance in Chennai',
-    description: 'Chennai-based VVS Fincorp helps businesses access cheque-based finance, short-term business funding and direct funding through financial partners, from ₹1 lakh to ₹30 crore.',
+    description: 'VVS Fincorp, Chennai: cheque-based finance, short-term business funding and direct funding through financial partners, from ₹1 lakh to ₹30 crore.',
     priority: '1.0',
   },
   {
@@ -107,6 +107,18 @@ function organizationSchema(siteUrl) {
   }
 }
 
+function websiteSchema(siteUrl) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${siteUrl}/#website`,
+    name: companyInfo.name,
+    url: absolute(siteUrl, '/'),
+    inLanguage: 'en-IN',
+    publisher: { '@id': `${siteUrl}/#organization` },
+  }
+}
+
 function breadcrumbSchema(siteUrl, breadcrumbs) {
   return {
     '@context': 'https://schema.org',
@@ -156,6 +168,7 @@ export function buildHead(page, { siteUrl = '', indexable = true } = {}) {
   const jsonLd = []
   if (page.path) {
     jsonLd.push(organizationSchema(siteUrl))
+    if (page.path === '/') jsonLd.push(websiteSchema(siteUrl))
     if (page.breadcrumbs) jsonLd.push(breadcrumbSchema(siteUrl, page.breadcrumbs))
     if (page.service) jsonLd.push(serviceSchema(siteUrl, page))
     if (page.faq) jsonLd.push(faqSchema())
@@ -170,6 +183,7 @@ export function buildHead(page, { siteUrl = '', indexable = true } = {}) {
     ogDescription: page.description,
     ogUrl: canonical,
     ogImage: `${siteUrl}${OG_IMAGE_PATH}`,
+    ogImageAlt: `${companyInfo.name} logo`,
     jsonLd: siteUrl ? jsonLd : [],
   }
 }

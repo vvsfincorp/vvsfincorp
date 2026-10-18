@@ -8,9 +8,9 @@ const EmiBreakupChart = lazy(() => import('./EmiBreakupChart'))
 const MIN_AMOUNT = 100000
 const MAX_AMOUNT = 300000000
 const MIN_RATE = 1
-const MAX_RATE = 4
+const MAX_RATE = 12
 const MIN_TENURE = 3
-const MAX_TENURE = 10
+const MAX_TENURE = 36
 const NAVY = '#0a2e5d'
 const GOLD = '#f5c33b'
 const CHART_COLORS = [NAVY, GOLD]
@@ -83,12 +83,12 @@ function EmiCalculatorSection() {
     },
     {
       id: 'interest-rate', label: 'Flat monthly interest rate', value: rate,
-      min: MIN_RATE, max: MAX_RATE, step: 0.1, decimals: 1, minLabel: '1%', maxLabel: '4%',
+      min: MIN_RATE, max: MAX_RATE, step: 0.1, decimals: 1, minLabel: '1%', maxLabel: '12%',
       valueText: (v) => `${v} percent per month`, adornment: '%', onChange: (v) => setRate(Math.round(v * 10) / 10),
     },
     {
       id: 'loan-tenure', label: 'Loan tenure', value: tenure,
-      min: MIN_TENURE, max: MAX_TENURE, step: 1, minLabel: '3 months', maxLabel: '10 months',
+      min: MIN_TENURE, max: MAX_TENURE, step: 1, minLabel: '3 months', maxLabel: '36 months',
       valueText: (v) => `${v} months`, adornment: 'months', onChange: setTenure,
     },
   ]

@@ -1,7 +1,7 @@
 import { Box, Breadcrumbs, Link, Stack, Typography } from '@mui/material'
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import { Link as RouterLink } from 'react-router-dom'
-import { pageWidthSx, type } from './styles'
+import { firstScreenMinHeight, pageWidthSx, type } from './styles'
 
 /**
  * Navy page header used by every inner page: breadcrumbs, eyebrow, H1,
@@ -18,6 +18,9 @@ function PageHero({ breadcrumbs, eyebrow, title, intro, actions, highlights, ima
       sx={{
         position: 'relative',
         overflow: 'hidden',
+        // Heroes with an image fill the first screen on laptops/desktops; text-only heroes stay compact
+        display: 'flex',
+        minHeight: hasMedia ? firstScreenMinHeight : undefined,
         pt: { xs: 2.5, md: 3.5 },
         pb: { xs: 4, md: hasMedia ? 5 : 4.5 },
         bgcolor: 'primary.dark',
@@ -45,7 +48,7 @@ function PageHero({ breadcrumbs, eyebrow, title, intro, actions, highlights, ima
         },
       }}
     >
-      <Box sx={{ ...pageWidthSx, position: 'relative', zIndex: 1 }}>
+      <Box sx={{ ...pageWidthSx, position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column' }}>
         <Breadcrumbs
           aria-label="Breadcrumb"
           sx={{ color: '#b9cadc', fontSize: 13, '& a': { color: '#b9cadc' }, '& .MuiBreadcrumbs-separator': { color: '#7f98b4' } }}
@@ -66,6 +69,9 @@ function PageHero({ breadcrumbs, eyebrow, title, intro, actions, highlights, ima
             gridTemplateColumns: { xs: '1fr', md: hasMedia ? 'minmax(0, 1.05fr) minmax(0, .95fr)' : '1fr' },
             gap: { xs: 3.5, md: 6 },
             alignItems: 'center',
+            // Takes the space left under the breadcrumbs and centres the content in it
+            flex: 1,
+            alignContent: 'center',
             mt: { xs: 3, md: 3.5 },
           }}
         >
@@ -100,14 +106,14 @@ function PageHero({ breadcrumbs, eyebrow, title, intro, actions, highlights, ima
           </Box>
 
           {image && (
-            <Box sx={{ position: 'relative', height: { xs: 190, sm: 260, md: 300 }, mr: { xs: 1, md: 1.5 } }}>
+            <Box sx={{ position: 'relative', height: { xs: 190, sm: 260, md: 'clamp(300px, 50vh, 480px)' }, mr: { xs: 1, md: 1.5 } }}>
               <Box sx={{ position: 'absolute', inset: { xs: '8px -6px -6px 6px', md: '12px -12px -12px 12px' }, border: '2px solid', borderColor: 'secondary.light', borderRadius: 3, opacity: 0.8 }} />
               <Box sx={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 3, border: '1px solid #ffffff59', bgcolor: '#0a1e34', boxShadow: '0 20px 48px #0005' }}>
                 <Box
                   component="img"
                   src={image.src}
                   srcSet={image.srcSet || undefined}
-                  sizes="(min-width: 900px) 45vw, 100vw"
+                  sizes="(min-width: 1300px) 560px, (min-width: 900px) 45vw, 100vw"
                   width={image.width}
                   height={image.height}
                   alt={image.alt}

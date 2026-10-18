@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { heroSlides } from "../../config/images";
+import { firstScreenMinHeight } from "../common/styles";
 import {
   Box,
   Button,
@@ -25,6 +26,10 @@ function HeroSection() {
       component="section"
       sx={{
         width: "100%",
+        // Fills the first screen below the header on laptops/desktops (see firstScreenMinHeight)
+        display: "flex",
+        flexDirection: "column",
+        minHeight: firstScreenMinHeight,
         pt: { xs: 0, md: "20px" },
         pb: { xs: 0, md: "24px" },
         bgcolor: "primary.dark",
@@ -45,6 +50,8 @@ function HeroSection() {
           alignItems: "stretch",
           width: { xs: "calc(100% - 32px)", md: "calc(100% - 48px)" },
           maxWidth: 1460,
+          // Grows to the hero height; the image stretches with it
+          flex: 1,
           mx: "auto",
           gap: { xs: 2, md: 3 },
           pt: { xs: 0, md: 2 },

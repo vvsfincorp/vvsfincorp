@@ -27,6 +27,11 @@ const photos = {
   'hero-2': { source: 'HeroSection/herosectionSlider2.jpg', widths: [640, 1024, 1600] },
   'hero-3': { source: 'HeroSection/herosectionSlider3.jpg', widths: [640, 1024, 1600] },
   'company-board': { source: 'CompanyPhotos/companyBoard.jpg', widths: [640, 1076] },
+  // Services, service detail and Why Choose Us pages (400px is for small card thumbnails)
+  'analytics': { source: 'HeroSection/carlos-muza-hpjSkU2UYSU-unsplash.jpg', widths: [400, 640, 1024, 1600] },
+  'handshake': { source: 'HeroSection/business-people-shaking-hands-finishing-up-meeting.jpg', widths: [400, 640, 1024, 1600] },
+  'planning': { source: 'HeroSection/towfiqu-barbhuiya-nApaSgkzaxg-unsplash.jpg', widths: [400, 640, 1024, 1600] },
+  'consultation': { source: 'HeroSection/young-couple-real-estate-agent-using-laptop-while-going-through-housing-plan-meeting.jpg', widths: [400, 640, 1024, 1600] },
 }
 
 const logoSource = path.join(assets, 'companyLogo/VVSFINCORP-removebg-preview.png')

@@ -16,7 +16,7 @@ React + Vite + MUI site for VVS Fincorp, Chennai.
 
 Copy `.env.example` to `.env.production` (and `.env.local` for development) and fill in:
 
-- `VITE_SITE_URL`: the live domain, e.g. `https://www.vvsfincorp.com`. Without it the build skips canonical URLs, structured data and the sitemap.
+- `VITE_SITE_URL`: the live domain, set to `https://www.vvsfincorp.com` in `.env.production`. Without it the build skips canonical URLs, structured data and the sitemap.
 - `VITE_EMAILJS_PUBLIC_KEY`, `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`: enquiry form delivery. Until all three are set, the form opens the visitor's email app instead.
 
 The EmailJS template can use these variables: `{{from_name}}`, `{{company}}`, `{{mobile}}`, `{{reply_to}}`, `{{funding_amount}}`, `{{loan_type}}`, `{{message}}`, `{{page_url}}`, `{{submitted_at}}`.

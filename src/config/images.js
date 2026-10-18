@@ -22,6 +22,22 @@ import hero3Medium from '../assets/optimized/hero-3-1024.webp'
 import hero3Large from '../assets/optimized/hero-3-1600.webp'
 import boardSmall from '../assets/optimized/company-board-640.webp'
 import boardLarge from '../assets/optimized/company-board-1076.webp'
+import analyticsXs from '../assets/optimized/analytics-400.webp'
+import analyticsSmall from '../assets/optimized/analytics-640.webp'
+import analyticsMedium from '../assets/optimized/analytics-1024.webp'
+import analyticsLarge from '../assets/optimized/analytics-1600.webp'
+import handshakeXs from '../assets/optimized/handshake-400.webp'
+import handshakeSmall from '../assets/optimized/handshake-640.webp'
+import handshakeMedium from '../assets/optimized/handshake-1024.webp'
+import handshakeLarge from '../assets/optimized/handshake-1600.webp'
+import planningXs from '../assets/optimized/planning-400.webp'
+import planningSmall from '../assets/optimized/planning-640.webp'
+import planningMedium from '../assets/optimized/planning-1024.webp'
+import planningLarge from '../assets/optimized/planning-1600.webp'
+import consultationXs from '../assets/optimized/consultation-400.webp'
+import consultationSmall from '../assets/optimized/consultation-640.webp'
+import consultationMedium from '../assets/optimized/consultation-1024.webp'
+import consultationLarge from '../assets/optimized/consultation-1600.webp'
 
 const srcSet = (sources) => sources.map(([file, width]) => `${file} ${width}w`).join(', ')
 
@@ -64,21 +80,51 @@ export const companyBoard = {
   alt: 'VVS Fincorp illuminated company signboard',
 }
 
+const analytics = {
+  src: analyticsLarge,
+  srcSet: srcSet([[analyticsXs, 400], [analyticsSmall, 640], [analyticsMedium, 1024], [analyticsLarge, 1600]]),
+  width: 1600,
+  height: 1140,
+  alt: 'Laptop showing a business finance dashboard with revenue charts',
+}
+
+const handshake = {
+  src: handshakeLarge,
+  srcSet: srcSet([[handshakeXs, 400], [handshakeSmall, 640], [handshakeMedium, 1024], [handshakeLarge, 1600]]),
+  width: 1600,
+  height: 1068,
+  alt: 'Business owner and finance partner shaking hands over a funding agreement',
+}
+
+const planning = {
+  src: planningLarge,
+  srcSet: srcSet([[planningXs, 400], [planningSmall, 640], [planningMedium, 1024], [planningLarge, 1600]]),
+  width: 1600,
+  height: 1068,
+  alt: 'Business owner reviewing short-term cash flow charts on a tablet',
+}
+
+const consultation = {
+  src: consultationLarge,
+  srcSet: srcSet([[consultationXs, 400], [consultationSmall, 640], [consultationMedium, 1024], [consultationLarge, 1600]]),
+  width: 1600,
+  height: 997,
+  alt: 'Funding advisor talking clients through their options on a laptop',
+}
+
 // Home page hero slider
 export const heroSlides = [heroMeeting, heroPlanning, heroDiscussion]
 
-// Page banners: reuse existing photos until the client supplies final images
+// Page banners. Each page's banner differs from every other photo on that page.
 export const pageImages = {
   about: companyBoard,
-  services: heroPlanning,
-  whyChooseUs: heroDiscussion,
-  faq: heroPlanning,
-  contact: heroMeeting,
+  services: analytics,
+  whyChooseUs: { ...heroPlanning, alt: 'Reviewing a clear, transparent funding plan' },
 }
 
 // One image per service slug (used on service cards and service detail pages)
 export const serviceImages = {
-  'cheque-based-finance': heroMeeting,
-  'short-term-business-funding': heroPlanning,
-  'direct-funding-solutions': heroDiscussion,
+  'cheque-based-finance': handshake,
+  'short-term-business-funding': planning,
+  'direct-funding-solutions': consultation,
 }
