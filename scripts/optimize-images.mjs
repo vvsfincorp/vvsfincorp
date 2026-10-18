@@ -21,11 +21,17 @@ const assets = path.join(root, 'src/assets')
 const optimizedDir = path.join(assets, 'optimized')
 const brandDir = path.join(root, 'public/brand')
 
-// name -> source file + output widths (px). Aspect ratio is preserved.
+// name -> source file + output widths (px), optional WebP quality (default 74). Aspect ratio is preserved.
 const photos = {
-  'hero-1': { source: 'HeroSection/herosectionSlider1.jpg', widths: [640, 1024, 1600] },
+  // Home page hero slider (AI-generated, 1469-1488px wide, so that is the largest size)
+  'home-1': { source: 'HeroSection/Gemini_Generated_Image_o53atho53atho53a.png', widths: [640, 1024, 1469] },
+  'home-2': { source: 'HeroSection/Gemini_Generated_Image_uf15fmuf15fmuf15.png', widths: [640, 1024, 1469] },
+  'home-3': { source: 'HeroSection/Gemini_Generated_Image_b1xc1ob1xc1ob1xc.png', widths: [640, 1024, 1469] },
+  'home-4': { source: 'HeroSection/Gemini_Generated_Image_ch9imch9imch9imc.png', widths: [640, 1024, 1488] },
+  'home-5': { source: 'HeroSection/Gemini_Generated_Image_fj4wpifj4wpifj4w.png', widths: [640, 1024, 1488] },
+  'home-6': { source: 'HeroSection/Gemini_Generated_Image_v2ak8pv2ak8pv2ak.png', widths: [640, 1024, 1488] },
+  // Why Choose Us page banner
   'hero-2': { source: 'HeroSection/herosectionSlider2.jpg', widths: [640, 1024, 1600] },
-  'hero-3': { source: 'HeroSection/herosectionSlider3.jpg', widths: [640, 1024, 1600] },
   'company-board': { source: 'CompanyPhotos/companyBoard.jpg', widths: [640, 1076] },
   // Services, service detail and Why Choose Us pages (400px is for small card thumbnails)
   'analytics': { source: 'HeroSection/carlos-muza-hpjSkU2UYSU-unsplash.jpg', widths: [400, 640, 1024, 1600] },
@@ -39,13 +45,15 @@ const fullLogoSource = path.join(assets, 'companyLogo/VVSFINCORPLOGOFULL.jpeg')
 
 async function optimizePhotos() {
   await mkdir(optimizedDir, { recursive: true })
-  for (const [name, { source, widths }] of Object.entries(photos)) {
+  for (const [name, { source, widths, quality = 74 }] of Object.entries(photos)) {
     for (const width of widths) {
       const output = path.join(optimizedDir, `${name}-${width}.webp`)
       const info = await sharp(path.join(assets, source))
         .rotate()
+        // PNG sources may carry an alpha channel; WebP output is always opaque
+        .flatten({ background: '#062149' })
         .resize({ width, withoutEnlargement: true })
-        .webp({ quality: 74, effort: 5 })
+        .webp({ quality, effort: 5 })
         .toFile(output)
       console.log(`${path.relative(root, output)}  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} KB`)
     }

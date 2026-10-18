@@ -69,6 +69,25 @@ function AboutPage() {
           </Reveal>
         </Box>
       </Box>
+    <Box component="section" aria-labelledby="about-visit" sx={{ pb: { xs: 1, md: 2 } }}>
+        <Reveal sx={{ ...pageWidthSx, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 2.5, p: { xs: 2.5, md: 3 }, border: '1px solid #e3eaf2', borderRadius: 3, bgcolor: '#f5f8fc' }}>
+          <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
+            <Box aria-hidden sx={{ ...iconBoxSx, bgcolor: 'primary.dark', borderColor: 'primary.dark', color: 'secondary.light' }}>
+              <LocationOnRoundedIcon />
+            </Box>
+            <Box>
+              <Typography id="about-visit" component="h2" sx={{ ...type.h3, color: 'primary.dark' }}>Visit our Chennai office</Typography>
+              <Typography component="address" sx={{ ...type.small, mt: 0.25, color: 'text.secondary', fontStyle: 'normal' }}>{companyInfo.address}, Tamil Nadu</Typography>
+            </Box>
+          </Stack>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ flex: '0 0 auto' }}>
+            <Button component={RouterLink} to="/contact" variant="contained" endIcon={<ArrowForwardRoundedIcon />} sx={{ ...goldButtonSx, boxShadow: 'none' }}>Map &amp; contact details</Button>
+            <Button component="a" href={`tel:${companyInfo.primaryPhone.replace(/\s/g, '')}`} variant="outlined" startIcon={<CallOutlinedIcon />} sx={outlineDarkButtonSx}>
+              {companyInfo.primaryPhone}
+            </Button>
+          </Stack>
+        </Reveal>
+      </Box>
 
       <StatsStrip />
 
@@ -117,26 +136,7 @@ function AboutPage() {
         </Box>
       </Box>
 
-      <Box component="section" aria-labelledby="about-visit" sx={{ pb: { xs: 1, md: 2 } }}>
-        <Reveal sx={{ ...pageWidthSx, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: { md: 'center' }, justifyContent: 'space-between', gap: 2.5, p: { xs: 2.5, md: 3 }, border: '1px solid #e3eaf2', borderRadius: 3, bgcolor: '#f5f8fc' }}>
-          <Stack direction="row" spacing={1.75} sx={{ alignItems: 'center' }}>
-            <Box aria-hidden sx={{ ...iconBoxSx, bgcolor: 'primary.dark', borderColor: 'primary.dark', color: 'secondary.light' }}>
-              <LocationOnRoundedIcon />
-            </Box>
-            <Box>
-              <Typography id="about-visit" component="h2" sx={{ ...type.h3, color: 'primary.dark' }}>Visit our Chennai office</Typography>
-              <Typography component="address" sx={{ ...type.small, mt: 0.25, color: 'text.secondary', fontStyle: 'normal' }}>{companyInfo.address}, Tamil Nadu</Typography>
-            </Box>
-          </Stack>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ flex: '0 0 auto' }}>
-            <Button component={RouterLink} to="/contact" variant="contained" endIcon={<ArrowForwardRoundedIcon />} sx={{ ...goldButtonSx, boxShadow: 'none' }}>Map &amp; contact details</Button>
-            <Button component="a" href={`tel:${companyInfo.primaryPhone.replace(/\s/g, '')}`} variant="outlined" startIcon={<CallOutlinedIcon />} sx={outlineDarkButtonSx}>
-              {companyInfo.primaryPhone}
-            </Button>
-          </Stack>
-        </Reveal>
-      </Box>
-
+  
       <CtaBanner />
     </Box>
   )

@@ -2,114 +2,145 @@ import { useEffect, useState } from "react";
 import { heroSlides } from "../../config/images";
 import { companyInfo, stats } from "../../data/siteContent";
 import { firstScreenMinHeight } from "../common/styles";
-import {
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import PhoneInTalkOutlinedIcon from "@mui/icons-material/PhoneInTalkOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 
+const SLIDE_MS = 6000;
 const highlights = ["Fast approval", "Minimal documentation", "Transparent process"];
 const fundingRange = stats.find((stat) => stat.type === "funding");
+const locality = companyInfo.addressParts.streetAddress.split(", ").at(-1);
 
-// Gentle up-and-down drift for the floating cards (switched off for reduced motion)
-const floatSx = (delay) => ({
-  animation: `hero-float 6s ease-in-out ${delay}s infinite`,
-  "@keyframes hero-float": {
-    "0%, 100%": { transform: "translateY(0)" },
-    "50%": { transform: "translateY(-8px)" },
-  },
-  "@media (prefers-reduced-motion: reduce)": { animation: "none" },
-});
+// Facts shown in the frosted panel at the bottom of the hero
+const quickFacts = [
+  { icon: AccountBalanceWalletOutlinedIcon, label: fundingRange.label, value: fundingRange.value },
+  { icon: PhoneInTalkOutlinedIcon, label: "Call our team", value: companyInfo.primaryPhone, href: `tel:${companyInfo.primaryPhone.replace(/\s/g, "")}` },
+  { icon: PlaceOutlinedIcon, label: "Visit us", value: `${locality}, ${companyInfo.addressParts.addressLocality}` },
+];
 
+/**
+ * Full-width home hero: the slider photos fill the background (with a slow zoom),
+ * a navy gradient keeps the text readable, and a frosted panel along the bottom
+ * shows key facts. The top of the hero fades to primary.dark so it meets the
+ * sticky header without a seam.
+ */
 function HeroSection() {
   const [activeSlide, setActiveSlide] = useState(0);
 
+  // Advance after SLIDE_MS; restarts whenever the slide changes, so a slide picked
+  // with the dots stays up for the full duration
   useEffect(() => {
-    const timer = window.setInterval(
+    const timer = window.setTimeout(
       () => setActiveSlide((slide) => (slide + 1) % heroSlides.length),
-      5000,
+      SLIDE_MS,
     );
-    return () => window.clearInterval(timer);
-  }, []);
+    return () => window.clearTimeout(timer);
+  }, [activeSlide]);
 
   return (
     <Box
       component="section"
       sx={{
-        width: "100%",
-        // Fills the first screen below the header on laptops/desktops (see firstScreenMinHeight)
-        display: "flex",
-        flexDirection: "column",
-        minHeight: firstScreenMinHeight,
-        pt: { xs: 0, md: "20px" },
-        pb: { xs: 0, md: "24px" },
-        bgcolor: "primary.dark",
-        // Soft blue glow behind the text and a faint gold glow behind the image. Both sit
-        // well below the top edge, and the first layer fades back to the header's navy, so
-        // the hero meets the sticky header (primary.dark) without a visible seam.
-        backgroundImage:
-          "linear-gradient(180deg, #062149 0%, #06214900 26%), radial-gradient(ellipse 55% 60% at 14% 64%, #123d70 0%, #123d7000 72%), radial-gradient(ellipse 40% 50% at 86% 72%, #e8c45a1c 0%, #e8c45a00 70%)",
         position: "relative",
         overflow: "hidden",
-        // Dot texture in the lower-left corner only, clear of the header
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "radial-gradient(#ffffff1a 1.2px, transparent 1.4px)",
-          backgroundSize: "22px 22px",
-          WebkitMaskImage: "radial-gradient(ellipse 50% 65% at 0% 100%, #000 0%, transparent 75%)",
-          maskImage: "radial-gradient(ellipse 50% 65% at 0% 100%, #000 0%, transparent 75%)",
-          pointerEvents: "none",
-        },
+        display: "flex",
+        flexDirection: "column",
+        minHeight: { xs: 640, ...firstScreenMinHeight },
+        bgcolor: "primary.dark",
+        color: "#fff",
       }}
     >
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: "minmax(0, 1fr) minmax(0, 1fr)",
-          },
-          alignItems: "stretch",
-          width: { xs: "calc(100% - 32px)", md: "calc(100% - 48px)" },
-          maxWidth: 1460,
-          // Grows to the hero height; the image stretches with it
-          flex: 1,
-          mx: "auto",
-          gap: { xs: 2, md: 5 },
-          pt: { xs: 0, md: 2 },
-          pb: { xs: 4, md: 3 },
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
+      {/* Background slides */}
+      <Box sx={{ position: "absolute", inset: 0 }}>
+        {heroSlides.map((slide, index) => {
+          const active = index === activeSlide;
+          return (
+            <Box
+              key={slide.src}
+              component="img"
+              src={slide.src}
+              srcSet={slide.srcSet}
+              sizes="100vw"
+              width={slide.width}
+              height={slide.height}
+              alt={active ? slide.alt : ""}
+              // First slide is the LCP image; the others load once the page is idle
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "low"}
+              decoding="async"
+              sx={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: { xs: slide.mobilePosition ?? "70% center", md: slide.position ?? "center" },
+                opacity: active ? 1 : 0,
+                visibility: active ? "visible" : "hidden",
+                // Slow zoom on the visible slide; it resets while hidden
+                transform: active ? "scale(1.08)" : "scale(1)",
+                transition: active
+                  ? `opacity 1s ease, visibility 1s ease, transform ${SLIDE_MS + 1000}ms linear`
+                  : "opacity 1s ease, visibility 1s ease, transform 0s linear 1s",
+                "@media (prefers-reduced-motion: reduce)": { transform: "none", transition: "opacity .3s ease, visibility .3s ease" },
+              }}
+            />
+          );
+        })}
+        {/* Readability overlay: solid navy on the text side, fading towards the photo,
+            plus fades at the top (header seam) and bottom (facts panel) */}
         <Box
           sx={{
-            px: { xs: 1, sm: 3, md: 5 },
-            py: { xs: 3, sm: 4, md: 4 },
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            position: "absolute",
+            inset: 0,
+            background: {
+              xs: "linear-gradient(180deg, #062149 0%, #062149d9 30%, #062149bf 60%, #062149f2 100%)",
+              md: "linear-gradient(180deg, #062149 0%, #06214900 22%, #06214900 70%, #062149cc 100%), linear-gradient(90deg, #062149 0%, #062149eb 30%, #06214999 55%, #06214926 100%)",
+            },
           }}
-        >
+        />
+        {/* Dot texture on the text side */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "radial-gradient(#ffffff17 1.2px, transparent 1.4px)",
+            backgroundSize: "22px 22px",
+            WebkitMaskImage: "radial-gradient(ellipse 45% 60% at 0% 75%, #000 0%, transparent 75%)",
+            maskImage: "radial-gradient(ellipse 45% 60% at 0% 75%, #000 0%, transparent 75%)",
+          }}
+        />
+      </Box>
+
+      {/* Text */}
+      <Box
+        sx={{
+          position: "relative",
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          width: { xs: "calc(100% - 32px)", md: "calc(100% - 96px)" },
+          maxWidth: 1300,
+          mx: "auto",
+          pt: { xs: 5, md: "clamp(24px, 5vh, 56px)" },
+          pb: { xs: 4, md: "clamp(20px, 3.5vh, 40px)" },
+        }}
+      >
+        <Box sx={{ maxWidth: 640 }}>
           <Box
             sx={{
-              alignSelf: "flex-start",
               display: "inline-flex",
               alignItems: "center",
               gap: 1,
               px: 1.5,
               py: 0.6,
               color: "secondary.light",
-              bgcolor: "#ffffff0d",
+              bgcolor: "#06214999",
+              backdropFilter: "blur(6px)",
               border: "1px solid #e8c45a66",
               borderRadius: 99,
               fontWeight: 700,
@@ -125,7 +156,6 @@ function HeroSection() {
                 height: 7,
                 borderRadius: "50%",
                 bgcolor: "secondary.light",
-                boxShadow: "0 0 0 0 #e8c45a99",
                 animation: "hero-pulse 2.4s ease-out infinite",
                 "@keyframes hero-pulse": {
                   "0%": { boxShadow: "0 0 0 0 #e8c45a99" },
@@ -136,90 +166,51 @@ function HeroSection() {
             />
             Your success, our commitment
           </Box>
+
           <Typography
             component="h1"
             sx={{
-              mt: 2,
-              color: "#fff",
-              fontSize: { xs: 38, sm: 50, md: 62 },
-              lineHeight: 1.03,
+              mt: 2.25,
+              // Scales with screen height on desktop so short laptop screens still show the facts panel
+              fontSize: { xs: 40, sm: 54, md: "clamp(46px, 7.4vh, 68px)" },
+              lineHeight: 1.02,
               letterSpacing: "-.055em",
               fontWeight: 700,
+              textShadow: "0 2px 24px #06214966",
             }}
           >
             Fast Funding.
             <br />
-            <Box
-              component="span"
-              sx={{
-                position: "relative",
-                color: "secondary.light",
-                // Hand-drawn style underline below "Trusted Solutions."
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  left: 2,
-                  right: "30%",
-                  bottom: { xs: -3, md: -4 },
-                  height: { xs: 4, md: 5 },
-                  borderRadius: 99,
-                  background: "linear-gradient(90deg, #e8c45a 0%, #e8c45a00 100%)",
-                  opacity: 0.6,
-                },
-              }}
-            >
+            <Box component="span" sx={{ color: "secondary.light" }}>
               Trusted Solutions.
             </Box>
           </Typography>
+
           <Typography
             component="h2"
-            sx={{
-              mt: { xs: 3, md: 3.5 },
-              mb: 1.25,
-              color: "#fff",
-              fontSize: { xs: 18, md: 23 },
-              lineHeight: 1.3,
-              fontWeight: 500,
-            }}
+            sx={{ mt: { xs: 2.5, md: 3 }, fontSize: { xs: 18, md: 23 }, lineHeight: 1.35, fontWeight: 500 }}
           >
-            Your Trusted Funding Partner &amp;
-            <br />
-            Building Success
+            Your Trusted Funding Partner &amp; Building Success
           </Typography>
-          <Typography
-            sx={{
-              color: "#d5e1ef",
-              fontSize: { xs: 15, md: 17 },
-              lineHeight: 1.7,
-              maxWidth: 500,
-            }}
-          >
+          <Typography sx={{ mt: 1.25, color: "#d5e1ef", fontSize: { xs: 15, md: 17 }, lineHeight: 1.7, maxWidth: 520 }}>
             Quick, reliable, and hassle-free business loans to help your
             business grow with confidence.
           </Typography>
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={1.5}
-            sx={{ mt: 3.5, maxWidth: 430 }}
-          >
+
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} sx={{ mt: 4, maxWidth: { sm: 470 } }}>
             <Button
               component="a"
               href="#contact"
               variant="contained"
               endIcon={<ArrowForwardRoundedIcon />}
               sx={{
-                minHeight: 52,
-                px: 3,
+                minHeight: 54,
+                px: 3.5,
                 color: "primary.dark",
                 bgcolor: "secondary.light",
-                boxShadow: "0 8px 24px #e8c45a40",
-                transition:
-                  "transform .2s ease, box-shadow .2s ease, background-color .2s ease",
-                "&:hover": {
-                  bgcolor: "#f0d276",
-                  boxShadow: "0 12px 28px #e8c45a59",
-                  transform: "translateY(-2px)",
-                },
+                boxShadow: "0 10px 28px #e8c45a4d",
+                transition: "transform .2s ease, box-shadow .2s ease, background-color .2s ease",
+                "&:hover": { bgcolor: "#f0d276", boxShadow: "0 14px 32px #e8c45a66", transform: "translateY(-2px)" },
               }}
             >
               Apply for Funding
@@ -230,50 +221,28 @@ function HeroSection() {
               variant="outlined"
               startIcon={<SupportAgentOutlinedIcon />}
               sx={{
-                minHeight: 52,
+                minHeight: 54,
                 px: 3,
-                borderColor: "#ffffff99",
                 color: "#fff",
-                "&:hover": {
-                  borderColor: "secondary.light",
-                  bgcolor: "#ffffff12",
-                  transform: "translateY(-2px)",
-                },
+                borderColor: "#ffffffb3",
+                bgcolor: "#ffffff0f",
+                backdropFilter: "blur(6px)",
                 transition: "transform .2s ease, background-color .2s ease",
+                "&:hover": { borderColor: "secondary.light", bgcolor: "#ffffff1f", transform: "translateY(-2px)" },
               }}
             >
               Talk to Expert
             </Button>
           </Stack>
 
-          {/* Key promises, separated from the buttons by a thin rule */}
           <Box
             component="ul"
             aria-label="Why businesses choose us"
-            sx={{
-              listStyle: "none",
-              m: 0,
-              mt: { xs: 3.5, md: 4.5 },
-              p: 0,
-              pt: { xs: 2.5, md: 3 },
-              borderTop: "1px solid #ffffff1f",
-              display: "flex",
-              flexWrap: "wrap",
-              columnGap: { xs: 2.5, md: 3.5 },
-              rowGap: 1.25,
-              maxWidth: 560,
-            }}
+            sx={{ listStyle: "none", m: 0, mt: { xs: 3, md: 3.5 }, p: 0, display: "flex", flexWrap: "wrap", columnGap: 3, rowGap: 1.25 }}
           >
             {highlights.map((item) => (
-              <Box
-                key={item}
-                component="li"
-                sx={{ display: "flex", alignItems: "center", gap: 1, color: "#e4ecf6", fontSize: { xs: 13.5, md: 14.5 }, fontWeight: 600 }}
-              >
-                <Box
-                  aria-hidden
-                  sx={{ width: 20, height: 20, display: "grid", placeItems: "center", borderRadius: "50%", bgcolor: "#e8c45a26", color: "secondary.light" }}
-                >
+              <Box key={item} component="li" sx={{ display: "flex", alignItems: "center", gap: 1, color: "#e4ecf6", fontSize: { xs: 13.5, md: 14.5 }, fontWeight: 600 }}>
+                <Box aria-hidden sx={{ width: 20, height: 20, display: "grid", placeItems: "center", borderRadius: "50%", bgcolor: "secondary.light", color: "primary.dark" }}>
                   <CheckRoundedIcon sx={{ fontSize: 14 }} />
                 </Box>
                 {item}
@@ -281,178 +250,94 @@ function HeroSection() {
             ))}
           </Box>
         </Box>
+      </Box>
 
-        {/* Image column: offset gold frame, slider, and two floating info cards */}
-        <Box
-          sx={{
-            position: "relative",
-            // Fixed landscape shape, centred beside the text, so the photo never
-            // stretches into a tall portrait on large screens
-            alignSelf: "center",
-            aspectRatio: { xs: "4 / 3", md: "5 / 4" },
-            maxHeight: { md: "calc(100vh - var(--site-chrome-h, 180px) - 80px)" },
-            minHeight: { md: 380 },
-            // Fill the column width minus the side margins (width: 100% would add them on top)
-            justifySelf: "stretch",
-            my: { md: 3 },
-            mr: { xs: 1, md: 2 },
-            ml: { xs: 0, md: 2 },
-          }}
-        >
-          <Box
-            aria-hidden
-            sx={{
-              position: "absolute",
-              inset: { xs: "10px -8px -8px 10px", md: "18px -16px -16px 18px" },
-              border: "2px solid",
-              borderColor: "secondary.light",
-              borderRadius: 4,
-              opacity: 0.7,
-            }}
-          />
-          <Box
-            sx={{
-              position: "absolute",
-              inset: 0,
-              overflow: "hidden",
-              borderRadius: 4,
-              bgcolor: "#09131e",
-              border: "1px solid #ffffff40",
-              boxShadow: "0 30px 60px #0007",
-            }}
-          >
+      {/* Bottom bar: slide controls + frosted facts panel */}
+      <Box
+        sx={{
+          position: "relative",
+          width: { xs: "calc(100% - 32px)", md: "calc(100% - 96px)" },
+          maxWidth: 1300,
+          mx: "auto",
+          pb: { xs: 3, md: 4 },
+          display: "flex",
+          flexDirection: { xs: "column-reverse", md: "row" },
+          alignItems: { xs: "stretch", md: "flex-end" },
+          justifyContent: "space-between",
+          gap: { xs: 2.5, md: 4 },
+        }}
+      >
+        <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+          <Typography aria-hidden sx={{ fontSize: 13, fontWeight: 700, letterSpacing: ".1em", color: "#c9d7e6", fontVariantNumeric: "tabular-nums" }}>
+            <Box component="span" sx={{ color: "#fff" }}>{String(activeSlide + 1).padStart(2, "0")}</Box>
+            {" / "}
+            {String(heroSlides.length).padStart(2, "0")}
+          </Typography>
+          <Stack direction="row" spacing={0.75}>
             {heroSlides.map((slide, index) => (
               <Box
                 key={slide.src}
+                component="button"
+                type="button"
+                aria-label={`Show slide ${index + 1}`}
+                aria-current={index === activeSlide ? "true" : undefined}
+                onClick={() => setActiveSlide(index)}
                 sx={{
-                  position: "absolute",
-                  inset: 0,
-                  opacity: index === activeSlide ? 1 : 0,
-                  visibility: index === activeSlide ? "visible" : "hidden",
-                  transition: "opacity .8s ease, visibility .8s ease",
+                  width: index === activeSlide ? 44 : 22,
+                  height: 5,
+                  p: 0,
+                  border: 0,
+                  borderRadius: 4,
+                  cursor: "pointer",
+                  bgcolor: index === activeSlide ? "secondary.light" : "#ffffff80",
+                  transition: "width .3s ease, background-color .3s ease",
+                  "&:hover": { bgcolor: "secondary.light" },
+                  "&:focus-visible": { outline: "2px solid #fff", outlineOffset: 3 },
                 }}
-              >
-                <Box
-                  component="img"
-                  src={slide.src}
-                  srcSet={slide.srcSet}
-                  sizes="(min-width: 900px) 50vw, 100vw"
-                  width={slide.width}
-                  height={slide.height}
-                  alt={slide.alt}
-                  // First slide is the LCP image; the others load once the page is idle
-                  loading={index === 0 ? "eager" : "lazy"}
-                  fetchPriority={index === 0 ? "high" : "low"}
-                  decoding="async"
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    display: "block",
-                    objectFit: "cover",
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                      "linear-gradient(0deg, #07121eb3 0%, transparent 40%), linear-gradient(90deg, #081a2c59 0%, transparent 45%)",
-                  }}
-                />
-              </Box>
+              />
             ))}
-            <Stack
-              direction="row"
-              spacing={0.75}
+          </Stack>
+        </Stack>
+
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "repeat(3, auto)" },
+            bgcolor: "#0a2e5d8c",
+            backdropFilter: "blur(14px)",
+            border: "1px solid #ffffff26",
+            borderRadius: 4,
+            boxShadow: "0 20px 50px #0006",
+            overflow: "hidden",
+          }}
+        >
+          {quickFacts.map(({ icon: Icon, label, value, href }, index) => (
+            <Box
+              key={label}
+              component={href ? "a" : "div"}
+              href={href}
               sx={{
-                position: "absolute",
-                left: { xs: 18, md: 32 },
-                bottom: { xs: 18, md: 30 },
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                px: { xs: 2.25, md: 3 },
+                py: { xs: 1.5, md: 2.25 },
+                color: "inherit",
+                borderTop: { xs: index ? "1px solid #ffffff1f" : 0, sm: 0 },
+                borderLeft: { sm: index ? "1px solid #ffffff1f" : 0 },
+                transition: "background-color .2s ease",
+                ...(href && { "&:hover": { bgcolor: "#ffffff12" } }),
               }}
             >
-              {heroSlides.map((slide, index) => (
-                <IconButton
-                  key={slide.src}
-                  size="small"
-                  aria-label={`Show slide ${index + 1}`}
-                  aria-current={index === activeSlide ? "true" : undefined}
-                  onClick={() => setActiveSlide(index)}
-                  sx={{
-                    width: index === activeSlide ? 42 : 24,
-                    height: 5,
-                    p: 0,
-                    borderRadius: 4,
-                    transition: "width .3s ease, background-color .3s ease",
-                    bgcolor:
-                      index === activeSlide ? "secondary.light" : "#ffffff99",
-                    "&:hover": { bgcolor: "secondary.light" },
-                  }}
-                />
-              ))}
-            </Stack>
-          </Box>
-
-          {/* Funding range card, overlapping the top-left corner */}
-          <Box
-            sx={{
-              position: "absolute",
-              top: { xs: 14, md: 36 },
-              left: { xs: 14, md: -36 },
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              p: { xs: 1.25, md: 1.75 },
-              pr: { xs: 2, md: 2.5 },
-              bgcolor: "#fff",
-              borderRadius: 3,
-              boxShadow: "0 18px 40px #0005",
-              ...floatSx(0),
-            }}
-          >
-            <Box
-              aria-hidden
-              sx={{ width: { xs: 36, md: 46 }, height: { xs: 36, md: 46 }, display: "grid", placeItems: "center", borderRadius: 2, bgcolor: "#fdf3d3", color: "primary.main" }}
-            >
-              <AccountBalanceWalletOutlinedIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
+              <Box aria-hidden sx={{ width: 42, height: 42, flex: "0 0 auto", display: "grid", placeItems: "center", borderRadius: 2, bgcolor: "#e8c45a26", color: "secondary.light" }}>
+                <Icon sx={{ fontSize: 22 }} />
+              </Box>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography sx={{ color: "#b9cadc", fontSize: 11.5, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>{label}</Typography>
+                <Typography sx={{ fontSize: { xs: 15, md: 16.5 }, fontWeight: 800, lineHeight: 1.35, whiteSpace: "nowrap" }}>{value}</Typography>
+              </Box>
             </Box>
-            <Box>
-              <Typography sx={{ color: "text.secondary", fontSize: { xs: 10.5, md: 12 }, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>
-                {fundingRange.label}
-              </Typography>
-              <Typography sx={{ color: "primary.dark", fontSize: { xs: 14, md: 17 }, fontWeight: 800, lineHeight: 1.3 }}>
-                {fundingRange.value}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Location card, overlapping the bottom-right corner */}
-          <Box
-            sx={{
-              position: "absolute",
-              right: { xs: 14, md: -28 },
-              bottom: { xs: 14, md: 40 },
-              display: { xs: "none", sm: "flex" },
-              alignItems: "center",
-              gap: 1.25,
-              px: 2,
-              py: 1.5,
-              color: "#fff",
-              bgcolor: "#0a2e5dd9",
-              backdropFilter: "blur(8px)",
-              border: "1px solid #ffffff2e",
-              borderRadius: 3,
-              boxShadow: "0 18px 40px #0005",
-              ...floatSx(1.5),
-            }}
-          >
-            <PlaceOutlinedIcon aria-hidden sx={{ color: "secondary.light" }} />
-            <Box>
-              <Typography sx={{ fontSize: 14.5, fontWeight: 800, lineHeight: 1.3 }}>Based in Chennai</Typography>
-              <Typography sx={{ color: "#c9d7e6", fontSize: 12.5 }}>
-                {companyInfo.addressParts.streetAddress.split(", ").at(-1)}, {companyInfo.addressParts.addressRegion}
-              </Typography>
-            </Box>
-          </Box>
+          ))}
         </Box>
       </Box>
     </Box>

@@ -15,6 +15,7 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { buildHead, notFoundPage, pages } from '../src/seo/seoConfig.js'
+import { heroSlideChoices } from '../src/config/heroSlides.js'
 
 const escapeHtml = (value) =>
   String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -47,12 +48,14 @@ function renderHead(head) {
 const SEO_BLOCK = /<!--seo-->[\s\S]*?<!--\/seo-->/
 
 // Main photo per route: an optimised image name from scripts/optimize-images.mjs and the
-// `sizes` its <img> uses. Keep in sync with src/config/images.js (heroSlides[0], pageImages,
-// serviceImages); a name with no matching file only logs a warning.
-const HOME_HERO_SIZES = '(min-width: 900px) 50vw, 100vw'
+// `sizes` its <img> uses. The home page follows src/config/heroSlides.js (first enabled slide);
+// keep the others in sync with src/config/images.js (pageImages, serviceImages). A name with
+// no matching file only logs a warning.
+const HOME_HERO_SIZES = '100vw'
+const firstHeroSlide = heroSlideChoices.find((choice) => !choice.disabled) ?? heroSlideChoices[0]
 const PAGE_HERO_SIZES = '(min-width: 1300px) 560px, (min-width: 900px) 45vw, 100vw'
 const lcpImages = {
-  '/': { name: 'hero-1', sizes: HOME_HERO_SIZES },
+  '/': { name: firstHeroSlide.image, sizes: HOME_HERO_SIZES },
   '/about': { name: 'company-board', sizes: PAGE_HERO_SIZES },
   '/services': { name: 'analytics', sizes: PAGE_HERO_SIZES },
   '/services/cheque-based-finance': { name: 'handshake', sizes: PAGE_HERO_SIZES },
@@ -61,7 +64,7 @@ const lcpImages = {
   '/why-choose-us': { name: 'hero-2', sizes: PAGE_HERO_SIZES },
 }
 
-// Builds the srcset from the hashed files Vite emitted, e.g. assets/hero-1-640-AbC123.webp
+// Builds the srcset from the hashed files Vite emitted, e.g. assets/home-1-640-AbC123.webp
 function buildSrcset(assetFiles, name) {
   const pattern = new RegExp(`^${name}-(\\d+)-[\\w-]+\\.webp$`)
   return assetFiles

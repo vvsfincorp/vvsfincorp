@@ -3,7 +3,7 @@
  * so an image can be replaced without touching any layout.
  *
  * How to replace an image:
- *  1. Overwrite the original in src/assets/ (e.g. HeroSection/herosectionSlider1.jpg),
+ *  1. Overwrite the original in src/assets/ (e.g. HeroSection/towfiqu-barbhuiya-nApaSgkzaxg-unsplash.jpg),
  *     or point scripts/optimize-images.mjs at a new file.
  *  2. Run `yarn optimize:images` to regenerate the WebP sizes in src/assets/optimized/.
  *  3. Update `width`/`height` below if the new image has a different aspect ratio.
@@ -11,17 +11,30 @@
  * (leave `srcSet` empty).
  */
 import logoImage from '../assets/optimized/logo-192.webp'
-import hero1Small from '../assets/optimized/hero-1-640.webp'
-import hero1Medium from '../assets/optimized/hero-1-1024.webp'
-import hero1Large from '../assets/optimized/hero-1-1600.webp'
+import home1Small from '../assets/optimized/home-1-640.webp'
+import home1Medium from '../assets/optimized/home-1-1024.webp'
+import home1Large from '../assets/optimized/home-1-1469.webp'
+import home2Small from '../assets/optimized/home-2-640.webp'
+import home2Medium from '../assets/optimized/home-2-1024.webp'
+import home2Large from '../assets/optimized/home-2-1469.webp'
+import home3Small from '../assets/optimized/home-3-640.webp'
+import home3Medium from '../assets/optimized/home-3-1024.webp'
+import home3Large from '../assets/optimized/home-3-1469.webp'
+import home4Small from '../assets/optimized/home-4-640.webp'
+import home4Medium from '../assets/optimized/home-4-1024.webp'
+import home4Large from '../assets/optimized/home-4-1488.webp'
+import home5Small from '../assets/optimized/home-5-640.webp'
+import home5Medium from '../assets/optimized/home-5-1024.webp'
+import home5Large from '../assets/optimized/home-5-1488.webp'
+import home6Small from '../assets/optimized/home-6-640.webp'
+import home6Medium from '../assets/optimized/home-6-1024.webp'
+import home6Large from '../assets/optimized/home-6-1488.webp'
 import hero2Small from '../assets/optimized/hero-2-640.webp'
 import hero2Medium from '../assets/optimized/hero-2-1024.webp'
 import hero2Large from '../assets/optimized/hero-2-1600.webp'
-import hero3Small from '../assets/optimized/hero-3-640.webp'
-import hero3Medium from '../assets/optimized/hero-3-1024.webp'
-import hero3Large from '../assets/optimized/hero-3-1600.webp'
 import boardSmall from '../assets/optimized/company-board-640.webp'
 import boardLarge from '../assets/optimized/company-board-1076.webp'
+import { heroSlideChoices } from './heroSlides'
 import analyticsXs from '../assets/optimized/analytics-400.webp'
 import analyticsSmall from '../assets/optimized/analytics-640.webp'
 import analyticsMedium from '../assets/optimized/analytics-1024.webp'
@@ -48,12 +61,52 @@ export const logo = {
   height: 192,
 }
 
-const heroMeeting = {
-  src: hero1Large,
-  srcSet: srcSet([[hero1Small, 640], [hero1Medium, 1024], [hero1Large, 1600]]),
-  width: 1600,
-  height: 1067,
-  alt: 'Business owner planning growth with financial documents',
+const homeTradingDesk = {
+  src: home1Large,
+  srcSet: srcSet([[home1Small, 640], [home1Medium, 1024], [home1Large, 1469]]),
+  width: 1469,
+  height: 704,
+  alt: 'Executive desk with a tablet showing financial charts, overlooking a city skyline',
+}
+
+const homePlanningDesk = {
+  src: home2Large,
+  srcSet: srcSet([[home2Small, 640], [home2Medium, 1024], [home2Large, 1469]]),
+  width: 1469,
+  height: 704,
+  alt: 'Business plans, market reports and funds laid out on an office desk',
+}
+
+const homeAdvisorHandover = {
+  src: home3Large,
+  srcSet: srcSet([[home3Small, 640], [home3Medium, 1024], [home3Large, 1469]]),
+  width: 1469,
+  height: 704,
+  alt: 'Funding advisor handing over documents to a client across an office desk',
+}
+
+const homeStatementReview = {
+  src: home4Large,
+  srcSet: srcSet([[home4Small, 640], [home4Medium, 1024], [home4Large, 1488]]),
+  width: 1488,
+  height: 713,
+  alt: 'Advisor walking a client through a financial statement at a desk',
+}
+
+const homeReportsDesk = {
+  src: home5Large,
+  srcSet: srcSet([[home5Small, 640], [home5Medium, 1024], [home5Large, 1488]]),
+  width: 1488,
+  height: 713,
+  alt: 'Market reports, business plans and funds on an office desk with a harbour view',
+}
+
+const homeSigningDesk = {
+  src: home6Large,
+  srcSet: srcSet([[home6Small, 640], [home6Medium, 1024], [home6Large, 1488]]),
+  width: 1488,
+  height: 713,
+  alt: 'Advisor signing a funding agreement at a desk overlooking the city',
 }
 
 const heroPlanning = {
@@ -62,14 +115,6 @@ const heroPlanning = {
   width: 1600,
   height: 1067,
   alt: 'Business funding and financial planning',
-}
-
-const heroDiscussion = {
-  src: hero3Large,
-  srcSet: srcSet([[hero3Small, 640], [hero3Medium, 1024], [hero3Large, 1600]]),
-  width: 1600,
-  height: 1067,
-  alt: 'Entrepreneurs discussing a funding plan',
 }
 
 export const companyBoard = {
@@ -112,8 +157,29 @@ const consultation = {
   alt: 'Funding advisor talking clients through their options on a laptop',
 }
 
-// Home page hero slider
-export const heroSlides = [heroMeeting, heroPlanning, heroDiscussion]
+// Every photo by its name in src/assets/optimized/ (used by the hero slide choices)
+const photosByName = {
+  'home-1': homeTradingDesk,
+  'home-2': homePlanningDesk,
+  'home-3': homeAdvisorHandover,
+  'home-4': homeStatementReview,
+  'home-5': homeReportsDesk,
+  'home-6': homeSigningDesk,
+  consultation,
+  analytics,
+  handshake,
+  planning,
+  'hero-2': heroPlanning,
+  'company-board': companyBoard,
+}
+
+// Home page hero slider: the enabled entries of src/config/heroSlides.js, in order
+const enabledChoices = heroSlideChoices.filter((choice) => !choice.disabled)
+export const heroSlides = (enabledChoices.length ? enabledChoices : heroSlideChoices.slice(0, 1)).map((choice) => {
+  const photo = photosByName[choice.image]
+  if (!photo) throw new Error(`src/config/heroSlides.js: unknown image "${choice.image}"`)
+  return choice.position ? { ...photo, position: choice.position } : photo
+})
 
 // Page banners. Each page's banner differs from every other photo on that page.
 export const pageImages = {
