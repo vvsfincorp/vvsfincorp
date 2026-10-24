@@ -24,7 +24,7 @@ function ServicePage() {
     <Box component="main" sx={{ bgcolor: '#fff' }}>
       <PageHero
         breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Services', to: '/services' }, { label: service.title }]}
-        eyebrow="Funding solutions by VVS Fincorp"
+        eyebrow="Business loans in Chennai by VVS Fincorp"
         title={service.title}
         intro={service.description}
         image={serviceImages[service.slug]}

@@ -33,8 +33,8 @@ function FaqPage() {
       <PageHero
         breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'FAQ' }]}
         eyebrow="Frequently asked questions"
-        title="Business funding FAQs"
-        intro="Answers to common questions about funding amounts, tenure, documents and how to get started with VVS Fincorp."
+        title="Business loan FAQs"
+        intro="Answers to common questions about business loan amounts, tenure, documents and how to get started with VVS Fincorp."
       />
 
       <Box component="section" aria-label="Questions and answers" sx={{ ...sectionSx, bgcolor: '#f5f8fc' }}>

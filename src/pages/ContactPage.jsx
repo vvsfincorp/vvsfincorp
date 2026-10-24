@@ -13,7 +13,7 @@ function ContactPage() {
       <PageHero
         breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Contact' }]}
         eyebrow="Contact VVS Fincorp"
-        title="Request business funding"
+        title="Apply for a business loan"
         intro="Share your requirement through the form below, or call, email or WhatsApp our team in Villivakkam, Chennai."
         actions={
           <>

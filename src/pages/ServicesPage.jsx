@@ -18,7 +18,7 @@ function ServicesPage() {
       <PageHero
         breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Services' }]}
         eyebrow="Our services"
-        title="Business funding services in Chennai"
+        title="Business loans & funding services in Chennai"
         intro="Three funding solutions for businesses and individuals, with requests from ₹1 lakh to ₹30 crore and short-term tenures from 3 to 10 months."
         image={pageImages.services}
         actions={

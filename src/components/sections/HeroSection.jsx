@@ -190,7 +190,7 @@ function HeroSection() {
             component="h2"
             sx={{ mt: { xs: 2.5, md: 3 }, fontSize: { xs: 18, md: 23 }, lineHeight: 1.35, fontWeight: 500 }}
           >
-            Your Trusted Funding Partner &amp; Building Success
+            Quick Business Loans in Chennai
           </Typography>
           <Typography sx={{ mt: 1.25, color: "#d5e1ef", fontSize: { xs: 15, md: 17 }, lineHeight: 1.7, maxWidth: 520 }}>
             Quick, reliable, and hassle-free business loans to help your

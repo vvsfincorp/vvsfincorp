@@ -59,7 +59,7 @@ function ServicesSection() {
               Tailored Funding Solutions<br />for Every Need
             </Typography>
             <Typography sx={{ mt: 2, color: 'text.secondary', fontSize: { xs: 15, md: 17 }, lineHeight: 1.65, maxWidth: 520 }}>
-              We offer quick and reliable financial solutions to help your business grow and succeed.
+              Quick business loans, cheque-based loans and working capital in Chennai to help your business grow and succeed.
             </Typography>
           </Box>
         </Stack>

@@ -19,6 +19,7 @@ export const companyInfo = {
   geo: { latitude: 13.1082693, longitude: 80.198468 },
   email: 'vvsfincorp@gmail.com',
   primaryPhone: '+91 9363992147',
+  description: 'Business loans and funding in Chennai, Tamil Nadu: cheque-based loans, short-term working capital loans and direct funding through lending partners, from ₹1 lakh to ₹30 crore.',
   mission: 'Empowering businesses with quick, reliable funding solutions to help turn plans into progress.',
 }
 
@@ -60,32 +61,36 @@ export const services = [
   {
     slug: 'cheque-based-finance',
     title: 'Cheque-Based Finance',
-    description: 'Quick funding against valid cheque transactions for business and personal requirements.',
-    overview: 'Access funding against valid cheque transactions for business or personal requirements. VVS Fincorp helps you understand the available options and the information needed to discuss your funding request.',
+    // Search phrases for this service, published as structured data (alternateName)
+    keywords: ['Cheque loan', 'Loan against cheque', 'Cheque-based loan'],
+    description: 'Quick loans against valid cheque transactions for business and personal requirements.',
+    overview: 'Get a quick loan against valid cheque transactions for business or personal requirements in Chennai. VVS Fincorp helps you understand the available options and the information needed to discuss your funding request.',
     suitableFor: 'Individuals and businesses looking for funding against valid cheque transactions.',
     benefits: ['Fast approval process', 'Minimal documentation', 'Flexible repayment options', 'Funding from ₹1 Lakh to ₹30 Crore'],
-    seoTitle: 'Cheque-Based Finance in Chennai | VVS Fincorp',
-    seoDescription: 'Funding against valid cheque transactions for business and personal requirements, from ₹1 lakh to ₹30 crore. Talk to VVS Fincorp in Villivakkam, Chennai.',
+    seoTitle: 'Cheque Loan in Chennai | Loan Against Cheque | VVS Fincorp',
+    seoDescription: 'Quick loans against valid cheque transactions for business and personal requirements, from ₹1 lakh to ₹30 crore. Talk to VVS Fincorp in Villivakkam, Chennai.',
   },
   {
     slug: 'short-term-business-funding',
     title: 'Short-Term Business Funding',
-    description: 'Working capital solutions for businesses with funding tenure ranging from 3 to 10 months.',
-    overview: 'Short-term funding can help businesses manage working capital needs and cash flow. Discuss your requirement with our team to explore a funding option and tenure that suits your business.',
+    keywords: ['Short-term business loan', 'Working capital loan', 'Business loan'],
+    description: 'Short-term business loans and working capital with tenures ranging from 3 to 10 months.',
+    overview: 'A short-term business loan can help businesses manage working capital needs and cash flow. Discuss your requirement with our team to explore a funding option and tenure that suits your business.',
     suitableFor: 'Businesses looking for short-term working capital or support with cash flow.',
     benefits: ['Improve cash flow', 'Support business growth', 'Quick disbursement', 'Flexible funding options'],
-    seoTitle: 'Short-Term Business Funding & Working Capital in Chennai | VVS Fincorp',
-    seoDescription: 'Short-term working capital for businesses with tenures from 3 to 10 months. Discuss your cash-flow requirement with VVS Fincorp, Chennai.',
+    seoTitle: 'Short-Term Business Loan & Working Capital Loan in Chennai | VVS Fincorp',
+    seoDescription: 'Short-term business loans and working capital loans with tenures from 3 to 10 months. Discuss your cash-flow requirement with VVS Fincorp, Chennai.',
   },
   {
     slug: 'direct-funding-solutions',
     title: 'Direct Funding Solutions',
-    description: 'Funding solutions through our network of financial partners.',
+    keywords: ['Business loan through lending partners', 'Direct business funding'],
+    description: 'Business loans and funding solutions through our network of financial partners.',
     overview: 'We connect funding requirements with our network of financial partners, keeping the process transparent and focused on finding a practical solution for your needs.',
     suitableFor: 'Applicants who want to explore funding options through financial partners.',
     benefits: ['No upfront charges', 'Transparent process', 'Responsive approvals', 'Dedicated customer support'],
-    seoTitle: 'Direct Funding Solutions Through Financial Partners | VVS Fincorp',
-    seoDescription: 'Explore funding options through the VVS Fincorp network of financial partners, with a transparent process and dedicated support from our Chennai team.',
+    seoTitle: 'Business Loans Through Financial Partners in Chennai | VVS Fincorp',
+    seoDescription: 'Explore business loan and funding options through the VVS Fincorp network of financial partners, with a transparent process and dedicated support from our Chennai team.',
   },
 ]
 
@@ -100,6 +105,14 @@ export const faqs = [
   {
     question: 'What services does VVS Fincorp offer?',
     answer: 'We offer three funding solutions: Cheque-Based Finance (funding against valid cheque transactions), Short-Term Business Funding (working capital with tenures from 3 to 10 months), and Direct Funding Solutions through our network of financial partners.',
+  },
+  {
+    question: 'Do you offer business loans in Chennai?',
+    answer: 'Yes. VVS Fincorp is based in Villivakkam, Chennai, and helps businesses with cheque-based loans, short-term business loans for working capital, and funding through our network of financial partners.',
+  },
+  {
+    question: 'How quick is the loan process?',
+    answer: 'We keep the process simple: share your requirement, discuss the options with our team, and decide how to proceed. Documentation is kept minimal so decisions can be made quickly. The exact timeline depends on the type of funding and the assessment of your request.',
   },
   {
     question: 'How much funding can I request?',
